@@ -1,0 +1,3 @@
+[submodule "lab_os/verify/ext/MicroTeX"]
+	path = lab_os/verify/ext/MicroTeX
+	url = git@github.com:NanoMichael/MicroTeX.git
