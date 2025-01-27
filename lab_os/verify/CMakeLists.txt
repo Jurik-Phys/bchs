@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.20)
 
-project(formula-draw-demo)
+project(lab_os_verify)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -24,6 +24,6 @@ set(SOURCE_EXE main.cpp)
 add_subdirectory(src)
 add_subdirectory(ext/MicroTeX)
 
-add_executable(formula-draw-demo ${SOURCE_EXE})
+add_executable(lab_os_verify ${SOURCE_EXE})
 
-target_link_libraries(formula-draw-demo PRIVATE src-lib Qt6::Widgets microtex microtex-qt)
+target_link_libraries(lab_os_verify PRIVATE src-lib Qt6::Widgets microtex microtex-qt)

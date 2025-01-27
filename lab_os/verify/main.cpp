@@ -1,12 +1,11 @@
 #include "appWindow.h"
 #include "microtex.h"
 
-void initQt() {
-    microtex::PlatformFactory::registerFactory(
-        "qt",
+void initQtTeX() {
+    microtex::PlatformFactory::registerFactory("qt",
         std::make_unique<microtex::PlatformFactory_qt>()
-      );
-      microtex::PlatformFactory::activate("qt");
+    );
+    microtex::PlatformFactory::activate("qt");
 }
 
 int main(int argc, char** argv){
@@ -21,7 +20,7 @@ int main(int argc, char** argv){
     const microtex::FontSrcFile math{fontClmFile, fontOtfFile};
     microtex::MicroTeX::init(math);
 
-    initQt();
+    initQtTeX();
 
     QAppWindow appWindow;
     appWindow.show();

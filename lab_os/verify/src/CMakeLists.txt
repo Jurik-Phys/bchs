@@ -1,7 +1,8 @@
 cmake_minimum_required(VERSION 3.20)
 
 set(SOURCE_LIB appWindow.cpp \\
-               qt_texwidget.cpp)
+               qt_texwidget.cpp \\
+               gasExplosionCalc.cpp )
 
 add_library(src-lib STATIC ${SOURCE_LIB})
 
