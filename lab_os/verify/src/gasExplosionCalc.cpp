@@ -8,7 +8,6 @@ GasExplosionCalc::GasExplosionCalc(){
 GasExplosionCalc::~GasExplosionCalc(){
 }
 
-
 // 1. "Число атомов углерода в углеводородном газе, ед."
 void GasExplosionCalc::setCarbonAtomCount(double& carbonAtomCount){
     m_carbonAtomCount = carbonAtomCount;
@@ -37,11 +36,11 @@ double GasExplosionCalc::getGasHeatOfCombustion(){
 
 
 // 4. "Верхний концентрационный предел воспламенения углеводородного газа, %" <<
-void GasExplosionCalc::setUpperFlammabilityLimit(double & upperFlammabilityLimit){
-    m_upperFlammabilityLimit = upperFlammabilityLimit;
+void GasExplosionCalc::setUpperFlammabilityLimit(double & uppFlammabilityLimit){
+    m_uppFlammabilityLimit = uppFlammabilityLimit;
 }
 double GasExplosionCalc::getUpperFlammabilityLimit(){
-    return m_upperFlammabilityLimit;
+    return m_uppFlammabilityLimit;
 }
 
 
@@ -89,13 +88,35 @@ double GasExplosionCalc::getEyeRadiationTime(){
     return m_eyeRadiationTime;
 }
 
+double GasExplosionCalc::getInitTg(){
+    return m_avgT;
+}
+
+double GasExplosionCalc::getTheoryOxygenRequire(){
+    return m_theoryOxygenRequire;
+}
+
+double GasExplosionCalc::getAirFlowRatio(){
+    return m_airFlowRatio;
+}
+
 void GasExplosionCalc::getResult(){
     qDebug() << "[II] Calculation run now!";
 
-    // 1. Задаётся средняя температура зоны горения в первом приближении (град. Цельсия);
-    m_avgT = 1400.0;
+    runStep01();
+    runStep02();
+    runStep03();
+}
 
+void GasExplosionCalc::runStep01(){
+    // 1. Задаётся средняя температура зоны горения
+    //    в первом приближении, град. Цельсия
+    m_avgT = 1400.0;
+}
+
+void GasExplosionCalc::runStep02(){
     // 2. По значению предельной концентрации газа в богатой смеси
+    //    определяется коэффициент расхода воздуха для первой стадии горения
 
     // Удельное теоретическое количество кислорода
     // при полном горении углеводородного газа CxHy
@@ -103,10 +124,14 @@ void GasExplosionCalc::getResult(){
     qDebug() << "[II] O_1 =" << m_theoryOxygenRequire;
 
     // определяется коэффициент расхода воздуха m_airFlowRatio
-    m_airFlowRatio = ((100.0 - m_upperFlammabilityLimit) * 0.2415)/(m_upperFlammabilityLimit*m_theoryOxygenRequire);
+    m_airFlowRatio = ((100.0 - m_uppFlammabilityLimit) * 0.2415) /
+                    (m_uppFlammabilityLimit*m_theoryOxygenRequire);
     qDebug() << "[II] n =" << m_airFlowRatio;
+}
 
-    // 3. Проводится расчёт неполного горения и рассчитывается состав продуктов горения
+void GasExplosionCalc::runStep03(){
+    // 3. Проводится расчёт неполного горения
+    //    и рассчитывается состав продуктов горения
 
     // Удельное количество (V) продуктов горения (ПГ) при n=1;
     m_volCO2AtAirFlowRatioEqualOne = m_carbonAtomCount;
@@ -129,80 +154,66 @@ void GasExplosionCalc::getResult(){
     m_kp = pow(10, m_lgKp);
     qDebug() << "[II] Kp =" << m_kp;
 
-    m_bTwo = m_volH2OAtAirFlowRatioEqualOne - (m_kp - 2.0)*m_volCO2AtAirFlowRatioEqualOne \
-            + 2.0*m_theoryOxygenRequire*(1.0 - m_airFlowRatio)*(m_kp - 1.0);
+    m_bTwo = m_volH2OAtAirFlowRatioEqualOne
+            - (m_kp - 2.0)*m_volCO2AtAirFlowRatioEqualOne +
+            2.0*m_theoryOxygenRequire*(1.0 - m_airFlowRatio)*(m_kp - 1.0);
     qDebug() << "[II] bTwo =" << m_bTwo;
 
     m_bOne = -1.0*m_bTwo + \
-        sqrt(pow(m_bTwo, 2.0) + 4.0*(m_kp - 1.0)*m_volCO2AtAirFlowRatioEqualOne* \
-            (m_volCO2AtAirFlowRatioEqualOne + m_volH2OAtAirFlowRatioEqualOne \
+        sqrt(pow(m_bTwo, 2.0) + 4.0*(m_kp - 1.0)*m_volCO2AtAirFlowRatioEqualOne*
+            (m_volCO2AtAirFlowRatioEqualOne + m_volH2OAtAirFlowRatioEqualOne
             - 2.0*m_theoryOxygenRequire*(1.0 - m_airFlowRatio)));
     qDebug() << "[II] bOne = " << m_bOne;
 
     m_volCO2AtAirFlowRatioLessOne = m_bOne/(2.0*(m_kp - 1.0));
-    m_volCOAtAirFlowRatioLessOne = m_volCO2AtAirFlowRatioEqualOne - m_volCO2AtAirFlowRatioLessOne;
-    m_volH2OAtAirFlowRatioLessOne = m_volCO2AtAirFlowRatioEqualOne + m_volH2OAtAirFlowRatioEqualOne \
-                                    - m_volCO2AtAirFlowRatioLessOne - 2.0*(1.0 - m_airFlowRatio)*m_theoryOxygenRequire;
-    m_volH2AtAirFlowRatioLessOne = m_volCO2AtAirFlowRatioLessOne - m_volCO2AtAirFlowRatioEqualOne + \
-                                   2.0*(1.0 - m_airFlowRatio)*m_theoryOxygenRequire;
+    m_volCOAtAirFlowRatioLessOne = m_volCO2AtAirFlowRatioEqualOne
+                                    - m_volCO2AtAirFlowRatioLessOne;
+    m_volH2OAtAirFlowRatioLessOne = m_volCO2AtAirFlowRatioEqualOne +
+                m_volH2OAtAirFlowRatioEqualOne - m_volCO2AtAirFlowRatioLessOne
+                - 2.0*(1.0 - m_airFlowRatio)*m_theoryOxygenRequire;
+    m_volH2AtAirFlowRatioLessOne = m_volCO2AtAirFlowRatioLessOne
+                - m_volCO2AtAirFlowRatioEqualOne +
+                2.0*(1.0 - m_airFlowRatio)*m_theoryOxygenRequire;
     m_volN2AtAirFlowRatioLessOne = 3.76*m_airFlowRatio*m_theoryOxygenRequire;
-    m_volSumAtAirFlowRatioLessOne = m_volCO2AtAirFlowRatioLessOne + \
-                                    m_volH2OAtAirFlowRatioLessOne + \
-                                    m_volCOAtAirFlowRatioLessOne +  \
-                                    m_volN2AtAirFlowRatioLessOne +  \
+    m_volSumAtAirFlowRatioLessOne = m_volCO2AtAirFlowRatioLessOne +
+                                    m_volH2OAtAirFlowRatioLessOne +
+                                    m_volCOAtAirFlowRatioLessOne +
+                                    m_volN2AtAirFlowRatioLessOne +
                                     m_volH2AtAirFlowRatioLessOne;
-    qDebug() << "[II] VolCO2AtAirFlowRatioLessOne =" << m_volCO2AtAirFlowRatioLessOne;
-    qDebug() << "[II] VolCOAtAirFlowRatioLessOne  =" << m_volCOAtAirFlowRatioLessOne;
-    qDebug() << "[II] VolH2OAtAirFlowRatioLessOne =" << m_volH2OAtAirFlowRatioLessOne;
-    qDebug() << "[II] VolH2AtAirFlowRatioLessOne  =" << m_volH2AtAirFlowRatioLessOne;
-    qDebug() << "[II] VolN2AtAirFlowRatioLessOne  =" << m_volN2AtAirFlowRatioLessOne;
-    qDebug() << "[II] VolSumAtAirFlowRatioLessOne =" << m_volSumAtAirFlowRatioLessOne;
+    qDebug() << "[II] VolCO2AtAirFlowRatioLessOne =" <<
+                                                m_volCO2AtAirFlowRatioLessOne;
+    qDebug() << "[II] VolCOAtAirFlowRatioLessOne  =" <<
+                                                m_volCOAtAirFlowRatioLessOne;
+    qDebug() << "[II] VolH2OAtAirFlowRatioLessOne =" <<
+                                                m_volH2OAtAirFlowRatioLessOne;
+    qDebug() << "[II] VolH2AtAirFlowRatioLessOne  =" <<
+                                                m_volH2AtAirFlowRatioLessOne;
+    qDebug() << "[II] VolN2AtAirFlowRatioLessOne  =" <<
+                                                m_volN2AtAirFlowRatioLessOne;
+    qDebug() << "[II] VolSumAtAirFlowRatioLessOne =" <<
+                                                m_volSumAtAirFlowRatioLessOne;
 
-    m_pressureCO2AtAirFlowRationLessOne = m_volCO2AtAirFlowRatioLessOne / m_volSumAtAirFlowRatioLessOne;
-    m_pressureCOAtAirFlowRationLessOne  = m_volCOAtAirFlowRatioLessOne  / m_volSumAtAirFlowRatioLessOne;
-    m_pressureH2OAtAirFlowRationLessOne = m_volH2OAtAirFlowRatioLessOne / m_volSumAtAirFlowRatioLessOne;
-    m_pressureH2AtAirFlowRationLessOne  = m_volH2AtAirFlowRatioLessOne  / m_volSumAtAirFlowRatioLessOne;
-    m_pressureN2AtAirFlowRationLessOne  = m_volN2AtAirFlowRatioLessOne  / m_volSumAtAirFlowRatioLessOne;
+    m_pressureCO2AtAirFlowRationLessOne =
+                m_volCO2AtAirFlowRatioLessOne / m_volSumAtAirFlowRatioLessOne;
+    m_pressureCOAtAirFlowRationLessOne  =
+                m_volCOAtAirFlowRatioLessOne  / m_volSumAtAirFlowRatioLessOne;
+    m_pressureH2OAtAirFlowRationLessOne =
+                m_volH2OAtAirFlowRatioLessOne / m_volSumAtAirFlowRatioLessOne;
+    m_pressureH2AtAirFlowRationLessOne  =
+                m_volH2AtAirFlowRatioLessOne  / m_volSumAtAirFlowRatioLessOne;
+    m_pressureN2AtAirFlowRationLessOne  =
+                m_volN2AtAirFlowRatioLessOne  / m_volSumAtAirFlowRatioLessOne;
 
-    qDebug() << "[II] PressureCO2AtAirFlowRationLessOne =" <<  m_pressureCO2AtAirFlowRationLessOne;
-    qDebug() << "[II] PressureCOAtAirFlowRationLessOne  =" <<  m_pressureCOAtAirFlowRationLessOne;
-    qDebug() << "[II] PressureH2OAtAirFlowRationLessOne =" <<  m_pressureH2OAtAirFlowRationLessOne;
-    qDebug() << "[II] PressureH2AtAirFlowRationLessOne  =" <<  m_pressureH2AtAirFlowRationLessOne;
-    qDebug() << "[II] PressureN2AtAirFlowRationLessOne  =" <<  m_pressureN2AtAirFlowRationLessOne;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    qDebug() << "[II] PressureCO2AtAirFlowRationLessOne =" <<
+                                            m_pressureCO2AtAirFlowRationLessOne;
+    qDebug() << "[II] PressureCOAtAirFlowRationLessOne  =" <<
+                                            m_pressureCOAtAirFlowRationLessOne;
+    qDebug() << "[II] PressureH2OAtAirFlowRationLessOne =" <<
+                                            m_pressureH2OAtAirFlowRationLessOne;
+    qDebug() << "[II] PressureH2AtAirFlowRationLessOne  =" <<
+                                            m_pressureH2AtAirFlowRationLessOne;
+    qDebug() << "[II] PressureN2AtAirFlowRationLessOne  =" <<
+                                            m_pressureN2AtAirFlowRationLessOne;
 }
+
 // End gasExplosionCalc.cpp

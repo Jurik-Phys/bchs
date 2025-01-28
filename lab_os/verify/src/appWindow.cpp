@@ -15,7 +15,12 @@ QAppWindow::QAppWindow(QWidget *parent) : QWidget(parent) {
     setSummaryFrame();
     setAppLayout();
 
+    // Calculator
     m_gasExplosionCalc = new GasExplosionCalc();
+
+    // Latex text generator
+    m_latexTextBuilder = new LatexTextBuilder();
+    m_latexTextBuilder->init(m_gasExplosionCalc);
 }
 
 QAppWindow::~QAppWindow(){
@@ -91,10 +96,8 @@ void QAppWindow::gasExplosionCalculation(){
     getInputData();
     m_gasExplosionCalc->getResult();
 
-    m_counter++;
-
-    QString text = QString::number(m_counter) + ".\\ 3^3 = 9; \\\\ \\ \\int_a^b x^2 dx;\\ \\text{Привет Мир; Hello, World!!!}\\ V=\\frac{dx}{dt}";
-    addToTexFrame(text);
+    addToTexFrame(m_latexTextBuilder->getTextStep01());
+    addToTexFrame(m_latexTextBuilder->getTextStep02());
 }
 
 void QAppWindow::setTexFrame(){
@@ -200,15 +203,20 @@ void QAppWindow::setInputDataFrame(){
     tableHeaders << "Название величины" << "Значение величины";
     table->setHorizontalHeaderLabels(tableHeaders);
 
-    valueNameList << "Число атомов углерода в углеводородном газе, ед." <<
-                     "Число атомов водорода в углеводородном газе, ед." <<
-                     "Теплота сгорания углеводородного газа, МДж/м<sup>3</sup>" <<
-                     "Верхний концентрационный предел воспламенения углеводородного газа, %" <<
-                     "Плотность углеводородного газа при нормальных условиях, кг/м<sup>3</sup>" <<
-                     "Нормальная скорость распространения пламени, м/c" <<
-                     "Масса углеводородного газа, образовавшего огневой шар, т" <<
-                     "Расстояние от зоны горения до приёмника инфракрасного излучения, м" <<
-                     "Время действия излучения на сетчатку глаза человека, с";
+    valueNameList <<
+        "Число атомов углерода в углеводородном газе (x), ед." <<
+        "Число атомов водорода в углеводородном газе (y), ед." <<
+        "Теплота сгорания углеводородного газа (Q), МДж/м<sup>3</sup>" <<
+        "Верхний концентрационный предел воспламенения "
+                                    "углеводородного газа (e<sub>в</sub>), %" <<
+        "Плотность углеводородного газа при нормальных условиях "
+                                          "(ρ<sub>0</sub>), кг/м<sup>3</sup>" <<
+        "Нормальная скорость распространения пламени (V<sub>н</sub>), м/c" <<
+        "Масса углеводородного газа, образовавшего огневой шар (G), т" <<
+        "Расстояние от зоны горения до приёмника инфракрасного излучения "
+                                                                     "(h), м" <<
+        "Время действия излучения на сетчатку глаза человека "
+                                                         "(t<sub>имп</sub>), с";
 
     valuesList << "3"     <<
                   "8"     <<

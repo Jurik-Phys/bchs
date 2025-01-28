@@ -17,6 +17,7 @@
 #include "microtex.h"
 #include "qt_texwidget.h"
 #include "gasExplosionCalc.h"
+#include "latexTextBuilder.h"
 
 class QAppWindow : public QWidget {
 
@@ -34,8 +35,6 @@ class QAppWindow : public QWidget {
         QTableWidget* table;
         QStringList   valueNameList;
         QStringList   valuesList;
-        int k;
-        int m_counter = 0;
 
         void getInputData();
         void gasExplosionCalculation();
@@ -44,6 +43,7 @@ class QAppWindow : public QWidget {
         void resizeEvent(QResizeEvent *event) override;
 
         GasExplosionCalc* m_gasExplosionCalc;
+        LatexTextBuilder* m_latexTextBuilder;
         QVBoxLayout*      m_texLayout;
 
     private slots:

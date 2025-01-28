@@ -11,43 +11,51 @@ class GasExplosionCalc {
         GasExplosionCalc();
         ~GasExplosionCalc();
 
-        // 1. "Число атомов углерода в углеводородном газе, ед."
+        // 1. Число атомов углерода в углеводородном газе, ед.
         void setCarbonAtomCount(double&);
         double getCarbonAtomCount();
 
-        // 2. "Число атомов водорода в углеводородном газе, ед." <<
+        // 2. Число атомов водорода в углеводородном газе, ед.
         void setHydrogenAtomCount(double&);
         double getHydrogenAtomCount();
 
-        // 3. "Теплота сгорания углеводородного газа, МДж/м^3" <<
+        // 3. Теплота сгорания углеводородного газа, МДж/м^3
         void setGasHeatOfCombustion(double&);
         double getGasHeatOfCombustion();
 
-        // 4. "Верхний концентрационный предел воспламенения углеводородного газа, %" <<
+        // 4. Верхний концентрационный предел воспламенения
+        //    углеводородного газа, %
         void setUpperFlammabilityLimit(double&);
         double getUpperFlammabilityLimit();
 
-        // 5. "Плотность углеводородного газа при нормальных условиях, кг/м^3" <<
+        // 5. Плотность углеводородного газа при нормальных условиях, кг/м^3
         void setGasDensity(double&);
         double getGasDensity();
 
-        // 6. "Нормальная скорость распространения пламени, м/c" <<
+        // 6. Нормальная скорость распространения пламени, м/c
         void setNormalFlameSpeed(double&);
         double getNormalFlameSpeed();
 
-        // 7. "Масса углеводородного газа, образовавшего огневой шар, т" <<
+        // 7. Масса углеводородного газа, образовавшего огневой шар, т
         void setGasMass(double&);
         double getGasMass();
 
-        // 8. "Расстояние от зоны горения до приёмника инфракрасного излучения, м" <<
+        // 8. Расстояние от зоны горения до приёмника
+        //    инфракрасного излучения, м
         void setDistanceToReceiver(double&);
         double getDistanceToReceiver();
 
-        // 9. "Время действия излучения на сетчатку глаза человека, с";
+        // 9. Время действия излучения на сетчатку глаза человека, с
         void setEyeRadiationTime(double&);
         double getEyeRadiationTime();
 
+        // Средняя температура зоны горения в первом приближении, град. Цельсия
+        double getInitTg();
+
         void getResult();
+
+        double getTheoryOxygenRequire();
+        double getAirFlowRatio();
 
     private:
         // Initial data from users input //
@@ -55,7 +63,7 @@ class GasExplosionCalc {
         double m_carbonAtomCount;
         double m_hydrogenAtomCount;
         double m_gasHeatOfCombustion;
-        double m_upperFlammabilityLimit;
+        double m_uppFlammabilityLimit;
         double m_gasDensity;
         double m_normalFlameSpeed;
         double m_gasMass;
@@ -94,6 +102,11 @@ class GasExplosionCalc {
         double m_pressureH2OAtAirFlowRationLessOne;
         double m_pressureH2AtAirFlowRationLessOne;
         double m_pressureN2AtAirFlowRationLessOne;
+
+        void runStep01();
+        void runStep02();
+        void runStep03();
+
 };
 
 
