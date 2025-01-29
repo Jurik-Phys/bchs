@@ -56,6 +56,23 @@ class GasExplosionCalc {
 
         double getTheoryOxygenRequire();
         double getAirFlowRatio();
+        double getVolCO2AtAirFlowRatioEqualOne();
+        double getVolH2OAtAirFlowRatioEqualOne();
+        double getVolCO2AtAirFlowRatioLessOne();
+        double getVolCOAtAirFlowRatioLessOne();
+        double getVolH2OAtAirFlowRatioLessOne();
+        double getVolH2AtAirFlowRatioLessOne();
+        double getVolN2AtAirFlowRatioLessOne();
+        double getVolSumAtAirFlowRatioLessOne();
+        double getMinusLgKp();
+        double getKp();
+        double getB1();
+        double getB2();
+        double getPressureCO2AtAirFlowRationLessOne();
+        double getPressureCOAtAirFlowRationLessOne();
+        double getPressureH2OAtAirFlowRationLessOne();
+        double getPressureH2AtAirFlowRationLessOne();
+        double getPressureN2AtAirFlowRationLessOne();
 
     private:
         // Initial data from users input //
@@ -81,7 +98,7 @@ class GasExplosionCalc {
         double m_volH2OAtAirFlowRatioEqualOne;
 
         // Логарифм константы равновесия "lg(k_p)" и сама константа "k_p";
-        double m_lgKp;
+        double m_minusLgKp;
         double m_kp;
 
         // Вспомогательные величины
@@ -103,9 +120,9 @@ class GasExplosionCalc {
         double m_pressureH2AtAirFlowRationLessOne;
         double m_pressureN2AtAirFlowRationLessOne;
 
-        void runStep01();
-        void runStep02();
-        void runStep03();
+        void runStage01();
+        void runStage02();
+        void runStage03();
 
 };
 

@@ -100,21 +100,89 @@ double GasExplosionCalc::getAirFlowRatio(){
     return m_airFlowRatio;
 }
 
+double GasExplosionCalc::getVolCO2AtAirFlowRatioEqualOne(){
+    return m_volCO2AtAirFlowRatioEqualOne;
+}
+
+double GasExplosionCalc::getVolH2OAtAirFlowRatioEqualOne(){
+    return m_volH2OAtAirFlowRatioEqualOne;
+}
+
+double GasExplosionCalc::getMinusLgKp(){
+    return m_minusLgKp;
+}
+
+double GasExplosionCalc::getKp(){
+    return m_kp;
+}
+
+double GasExplosionCalc::getB1(){
+    return m_bOne;
+}
+
+double GasExplosionCalc::getB2(){
+    return m_bTwo;
+}
+
+double GasExplosionCalc::getVolCO2AtAirFlowRatioLessOne(){
+    return m_volCO2AtAirFlowRatioLessOne;
+}
+
+double GasExplosionCalc::getVolH2OAtAirFlowRatioLessOne(){
+    return m_volH2OAtAirFlowRatioLessOne;
+}
+
+double GasExplosionCalc::getVolH2AtAirFlowRatioLessOne(){
+    return m_volH2AtAirFlowRatioLessOne;
+}
+
+double GasExplosionCalc::getVolN2AtAirFlowRatioLessOne(){
+    return m_volN2AtAirFlowRatioLessOne;
+}
+
+double GasExplosionCalc::getVolCOAtAirFlowRatioLessOne(){
+    return m_volCOAtAirFlowRatioLessOne;
+}
+
+double GasExplosionCalc::getVolSumAtAirFlowRatioLessOne(){
+    return m_volSumAtAirFlowRatioLessOne;
+}
+
+double GasExplosionCalc::getPressureCO2AtAirFlowRationLessOne(){
+    return m_pressureCO2AtAirFlowRationLessOne;
+}
+
+double GasExplosionCalc::getPressureCOAtAirFlowRationLessOne(){
+   return m_pressureCOAtAirFlowRationLessOne;
+}
+
+double GasExplosionCalc::getPressureH2OAtAirFlowRationLessOne(){
+    return m_pressureH2OAtAirFlowRationLessOne;
+}
+
+double GasExplosionCalc::getPressureH2AtAirFlowRationLessOne(){
+    return m_pressureH2AtAirFlowRationLessOne;
+}
+
+double GasExplosionCalc::getPressureN2AtAirFlowRationLessOne(){
+    return m_pressureN2AtAirFlowRationLessOne;
+}
+
 void GasExplosionCalc::getResult(){
     qDebug() << "[II] Calculation run now!";
 
-    runStep01();
-    runStep02();
-    runStep03();
+    runStage01();
+    runStage02();
+    runStage03();
 }
 
-void GasExplosionCalc::runStep01(){
+void GasExplosionCalc::runStage01(){
     // 1. Задаётся средняя температура зоны горения
     //    в первом приближении, град. Цельсия
     m_avgT = 1400.0;
 }
 
-void GasExplosionCalc::runStep02(){
+void GasExplosionCalc::runStage02(){
     // 2. По значению предельной концентрации газа в богатой смеси
     //    определяется коэффициент расхода воздуха для первой стадии горения
 
@@ -129,7 +197,7 @@ void GasExplosionCalc::runStep02(){
     qDebug() << "[II] n =" << m_airFlowRatio;
 }
 
-void GasExplosionCalc::runStep03(){
+void GasExplosionCalc::runStage03(){
     // 3. Проводится расчёт неполного горения
     //    и рассчитывается состав продуктов горения
 
@@ -142,16 +210,16 @@ void GasExplosionCalc::runStep03(){
     // n < 1
 
     // Логарифм константы равновесия
-    m_lgKp = -1.0*(2059.0/(m_avgT + 273.0) \
-            - 1.5904*log10(m_avgT + 273.0) + \
-            0.001817*(m_avgT + 273.0) \
-            - 0.565*pow(10.0, -6.0)*pow(m_avgT + 273.0, 2.0) + \
-            8.24*pow(10.0, -11.0)*pow(m_avgT + 273.0, 3.0) + 1.5313);
-    qDebug() << "[II] lgKp =" << m_lgKp;
+    m_minusLgKp = 1.0*(2059.0/(m_avgT + 273.0)
+            - 1.5904*log10(m_avgT + 273.0)
+            + 0.001817*(m_avgT + 273.0)
+            - 0.565*pow(10.0, -6.0)*pow(m_avgT + 273.0, 2.0)
+            + 8.24*pow(10.0, -11.0)*pow(m_avgT + 273.0, 3.0) + 1.5313);
+    qDebug() << "[II] -lgKp =" << m_minusLgKp;
 
     // Значение константы равновесия
 
-    m_kp = pow(10, m_lgKp);
+    m_kp = pow(10, -1*m_minusLgKp);
     qDebug() << "[II] Kp =" << m_kp;
 
     m_bTwo = m_volH2OAtAirFlowRatioEqualOne
@@ -159,7 +227,7 @@ void GasExplosionCalc::runStep03(){
             2.0*m_theoryOxygenRequire*(1.0 - m_airFlowRatio)*(m_kp - 1.0);
     qDebug() << "[II] bTwo =" << m_bTwo;
 
-    m_bOne = -1.0*m_bTwo + \
+    m_bOne = -1.0*m_bTwo +
         sqrt(pow(m_bTwo, 2.0) + 4.0*(m_kp - 1.0)*m_volCO2AtAirFlowRatioEqualOne*
             (m_volCO2AtAirFlowRatioEqualOne + m_volH2OAtAirFlowRatioEqualOne
             - 2.0*m_theoryOxygenRequire*(1.0 - m_airFlowRatio)));
