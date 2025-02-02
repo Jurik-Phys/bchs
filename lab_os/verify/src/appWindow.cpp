@@ -42,6 +42,7 @@ void QAppWindow::getInputData(){
     qDebug() << "[II] Get input data from table";
     for (int row = 0; row < table->rowCount(); ++row) {
         QTableWidgetItem* item = table->item(row, 1);
+
         if (item) {
             bool ok = false;
             double value = item->text().toDouble(&ok);

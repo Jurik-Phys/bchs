@@ -50,33 +50,49 @@ class GasExplosionCalc {
         double getEyeRadiationTime();
 
         // Средняя температура зоны горения в первом приближении, град. Цельсия
-        double getInitTg();
+        double getInitTg(QString stage = "last");
+        void   setFirstValueInitTg(double val);
 
         void getResult();
 
-        double getTheoryOxygenRequire();
+        double getTheoryOxygenRequire(QString stage = "last");
         double getAirFlowRatio();
         double getVolCO2AtAirFlowRatioEqualOne();
         double getVolH2OAtAirFlowRatioEqualOne();
-        double getVolCO2AtAirFlowRatioLessOne();
-        double getVolCOAtAirFlowRatioLessOne();
-        double getVolH2OAtAirFlowRatioLessOne();
-        double getVolH2AtAirFlowRatioLessOne();
-        double getVolN2AtAirFlowRatioLessOne();
-        double getVolSumAtAirFlowRatioLessOne();
-        double getMinusLgKp();
-        double getKp();
-        double getB1();
-        double getB2();
-        double getPressureCO2AtAirFlowRationLessOne();
-        double getPressureCOAtAirFlowRationLessOne();
-        double getPressureH2OAtAirFlowRationLessOne();
-        double getPressureH2AtAirFlowRationLessOne();
-        double getPressureN2AtAirFlowRationLessOne();
+        double getVolCO2AtAirFlowRatioLessOne(QString stage = "last");
+        double getVolCOAtAirFlowRatioLessOne(QString stage = "last");
+        double getVolH2OAtAirFlowRatioLessOne(QString stage = "last");
+        double getVolH2AtAirFlowRatioLessOne(QString stage = "last");
+        double getVolN2AtAirFlowRatioLessOne(QString stage = "last");
+        double getVolSumAtAirFlowRatioLessOne(QString stage = "last");
+        void setFirstValueVolCO2AtAirFlowRatioLessOne(double);
+        void setFirstValueVolCOAtAirFlowRatioLessOne(double);
+        void setFirstValueVolH2OAtAirFlowRatioLessOne(double);
+        void setFirstValueVolH2AtAirFlowRatioLessOne(double);
+        void setFirstValueVolN2AtAirFlowRatioLessOne(double);
+        void setFirstValueVolSumAtAirFlowRatioLessOne(double);
+        double getMinusLgKp(QString stage = "last");
+        void   setFirstValueMinusLgKp(double);
+        double getKp(QString stage = "last");
+        void   setFirstValueKp(double);
+        double getB1(QString stage = "last");
+        void   setFirstValueB1(double);
+        double getB2(QString stage = "last");
+        void   setFirstValueB2(double);
+        double getPressureCO2AtAirFlowRationLessOne(QString stage = "last");
+        double getPressureCOAtAirFlowRationLessOne(QString stage = "last");
+        double getPressureH2OAtAirFlowRationLessOne(QString stage = "last");
+        double getPressureH2AtAirFlowRationLessOne(QString stage = "last");
+        double getPressureN2AtAirFlowRationLessOne(QString stage = "last");
+        void   setFirstValuePressureCO2AtAirFlowRationLessOne(double);
+        void   setFirstValuePressureCOAtAirFlowRationLessOne(double);
+        void   setFirstValuePressureH2OAtAirFlowRationLessOne(double);
+        void   setFirstValuePressureH2AtAirFlowRationLessOne(double);
+        void   setFirstValuePressureN2AtAirFlowRationLessOne(double);
 
     private:
         // Initial data from users input //
-        double m_avgT;
+        double m_avgT, m_init_avgT;
         double m_carbonAtomCount;
         double m_hydrogenAtomCount;
         double m_gasHeatOfCombustion;
@@ -98,31 +114,49 @@ class GasExplosionCalc {
         double m_volH2OAtAirFlowRatioEqualOne;
 
         // Логарифм константы равновесия "lg(k_p)" и сама константа "k_p";
-        double m_minusLgKp;
-        double m_kp;
+        double m_minusLgKp, m_init_minusLgKp;
+        double m_kp, m_init_kp;
 
         // Вспомогательные величины
-        double m_bOne;
-        double m_bTwo;
+        double m_bOne, m_init_bOne;
+        double m_bTwo, m_init_bTwo;
 
-        // Удельное количество продуктов горения при N<1 (CO, CO2, H2O, N2, H2, Sum)
-        double m_volCOAtAirFlowRatioLessOne;
-        double m_volN2AtAirFlowRatioLessOne;
-        double m_volH2AtAirFlowRatioLessOne;
-        double m_volCO2AtAirFlowRatioLessOne;
-        double m_volH2OAtAirFlowRatioLessOne;
-        double m_volSumAtAirFlowRatioLessOne;
+        // Удельное количество продуктов горения
+        // при N<1 (CO, CO2, H2O, N2, H2, Sum)
+        double m_volCOAtAirFlowRatioLessOne,  m_init_volCOAtAirFlowRatioLessOne;
+        double m_volN2AtAirFlowRatioLessOne,  m_init_volN2AtAirFlowRatioLessOne;
+        double m_volH2AtAirFlowRatioLessOne,  m_init_volH2AtAirFlowRatioLessOne;
+        double m_volCO2AtAirFlowRatioLessOne,
+                                             m_init_volCO2AtAirFlowRatioLessOne;
+        double m_volH2OAtAirFlowRatioLessOne,
+                                             m_init_volH2OAtAirFlowRatioLessOne;
+        double m_volSumAtAirFlowRatioLessOne,
+                                             m_init_volSumAtAirFlowRatioLessOne;
 
         // Парциальное давление в продуктах горения //
-        double m_pressureCO2AtAirFlowRationLessOne;
-        double m_pressureCOAtAirFlowRationLessOne;
-        double m_pressureH2OAtAirFlowRationLessOne;
-        double m_pressureH2AtAirFlowRationLessOne;
-        double m_pressureN2AtAirFlowRationLessOne;
+        double m_pressureCO2AtAirFlowRationLessOne,
+                                       m_init_pressureCO2AtAirFlowRationLessOne;
+        double m_pressureCOAtAirFlowRationLessOne,
+                                        m_init_pressureCOAtAirFlowRationLessOne;
+        double m_pressureH2OAtAirFlowRationLessOne,
+                                       m_init_pressureH2OAtAirFlowRationLessOne;
+        double m_pressureH2AtAirFlowRationLessOne,
+                                        m_init_pressureH2AtAirFlowRationLessOne;
+        double m_pressureN2AtAirFlowRationLessOne,
+                                        m_init_pressureN2AtAirFlowRationLessOne;
 
-        void runStage01();
+        // Энтальпия продуктов сгорания при 2200 град. Цельсия
+        double m_enthalpy;
+
+        // Точность уточнения температуры на 4-ом этапе;
+        double m_accuracyCalcAvgT = 0.1;
+
+        int m_calcIterationCounter;
+
+        void runStage01(double initT = 1400.0);
         void runStage02();
         void runStage03();
+        void runStage04();
 
 };
 

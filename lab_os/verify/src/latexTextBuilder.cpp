@@ -23,7 +23,7 @@ QString LatexTextBuilder::getTextStage01(){
         \end{align}
     )" ;
 
-    QString str1 = getNumericString(m_appCalc->getInitTg());
+    QString str1 = getNumericString(m_appCalc->getInitTg("first"));
 
     res = res.arg(str1);
 
@@ -38,7 +38,8 @@ QString LatexTextBuilder::getTextStage02(){
         \text{для первой стадии горения.}
         \\
         \begin{align}
-            n = \frac{(100 - e_\text{в}) \cdot 0.24}{e_\text{в} \cdot O_1}.
+            n = \frac{(100 - e_\text{в}) \cdot 0\mathord{,}24}{e_\text{в}
+                                                                    \cdot O_1}.
         \end{align}
         \\
         \text{    $O_1$ - удельное теоретическое количество кислорода при полном }
@@ -47,8 +48,8 @@ QString LatexTextBuilder::getTextStage02(){
         \begin{gather}
             O_1 = x + \frac{y}{4} = %3 + \frac{%4}{4} = {%5}. \\
 
-            n = \frac{(100 - e_\text{в})\cdot 0.2415}{e_\text{в}\cdot O_1} =
-            \frac{(100 - {%6})\cdot 0.2415}{{%6}\cdot {%7}} = %8.
+            n = \frac{(100 - e_\text{в})\cdot 0\mathord{,}2415}{e_\text{в}\cdot O_1} =
+            \frac{(100 - {%6})\cdot 0\mathord{,}2415}{{%6}\cdot {%7}} = %8.
         \end{gather}
     )";
 
@@ -88,16 +89,18 @@ QString LatexTextBuilder::getTextStage03(){
         \\
         \begin{gather}
             -\lg{k_p} = \frac{2059}{T_g + 273}
-            - 1.5904 \cdot \lg{(T_g + 273)}
-            + 0.001817 \cdot (T_g + 273)\ - \\
-            - 0.565 \cdot 10^{-6} \cdot (T_g + 273)^2
-            + 8.24 \cdot 10^{-11} \cdot (T_g + 273)^3 + 1.5313 =
+            - 1\mathord{,}5904 \cdot \lg{(T_g + 273)}
+            + 0\mathord{,}001817 \cdot (T_g + 273)\ - \\
+            - 0\mathord{,}565 \cdot 10^{-6} \cdot (T_g + 273)^2
+            + 8\mathord{,}24 \cdot 10^{-11} \cdot (T_g + 273)^3
+            + 1\mathord{,}5313 =
             \\
             = \frac{2059}{{%4} + 273}
-            - 1.5904 \cdot \lg{({%4} + 273)}
-            + 0.001817 \cdot ({%4} + 273)\ - \\
-            - 0.565 \cdot 10^{-6} \cdot ({%4} + 273)^2
-            + 8.24 \cdot 10^{-11} \cdot ({%4} + 273)^3 + 1.5313 = {%5}
+            - 1\mathord{,}5904 \cdot \lg{({%4} + 273)}
+            + 0\mathord{,}001817 \cdot ({%4} + 273)\ - \\
+            - 0\mathord{,}565 \cdot 10^{-6} \cdot ({%4} + 273)^2
+            + 8\mathord{,}24 \cdot 10^{-11} \cdot ({%4} + 273)^3
+            + 1\mathord{,}5313 = {%5}.
             \\
             k_p = \frac{1}{10^{-\lg{k_p}}} = \frac{1}{10^{%5}} = {%6}
         \end{gather}
@@ -109,14 +112,14 @@ QString LatexTextBuilder::getTextStage03(){
             + 2 \cdot O_1 \cdot (1 - n)(k_p - 1) =
             \\
             = {%7} - ({%6} - 2) \cdot {%8} + 2 \cdot {%9} \cdot
-            (1 - {%10})({%6} - 1) = {%11}
+            (1 - {%10})({%6} - 1) = {%11}.
             \\
             b_1 = -b_2 + \sqrt{ b_2^2 + 4 \cdot \left(k_p - 1\right) \cdot V_{CO_2}^{n=1}
             \cdot \left(V_{CO_2}^{n = 1} + V_{H_2 O}^{n = 1}
             -2 \cdot O_1 \cdot (1 - n)\right)} = \\
             = -{%11} + \sqrt{ {%11}^2 + 4 \cdot \left({%6} - 1\right) \cdot {%1}
             \cdot \left({%1} + {%3}
-            -2 \cdot {%9} \cdot (1 - {%10})\right)} = {%12} \\
+            -2 \cdot {%9} \cdot (1 - {%10})\right)} = {%12}. \\
         \end{gather} \\
         \begin{align}
             V_{CO_2}^{n < 1} & = \frac{b_1}{2\cdot (k_p - 1)} =
@@ -132,7 +135,8 @@ QString LatexTextBuilder::getTextStage03(){
                                 (1 - n ) \cdot O_1 = \\
                             & = {%13} - {%1} - 2 \cdot (1 - {%10}) \cdot {%9} =
                                                                         {%16}.\\
-            V_{N_2}^{n < 1} & = 3.76 \cdot n \cdot O_1 = 3.76 \cdot {%10}
+            V_{N_2}^{n < 1} & = 3\mathord{,}76 \cdot n \cdot O_1 =
+                                                      3\mathord{,}76 \cdot {%10}
                                 \cdot {%9} = {%17}. \\
             V_\text{ПГ}^{n < 1} & = V_{CO_2}^{n<1} + V_{H_2 O}^{n<1}
                                 + V_{CO}^{n<1} + V_{N_2}^{n<1} + V_{H_2}^{n<1} =
@@ -159,39 +163,39 @@ QString LatexTextBuilder::getTextStage03(){
     QString str2 = getNumericString(m_appCalc->getHydrogenAtomCount()); ;
     QString str3 = getNumericString(m_appCalc->
                                              getVolH2OAtAirFlowRatioEqualOne());
-    QString str4 = getNumericString(m_appCalc->getInitTg());
-    QString str5 = getNumericString(m_appCalc->getMinusLgKp(), "verb" );
-    QString str6 = getNumericString(m_appCalc->getKp(), "verb" );
+    QString str4 = getNumericString(m_appCalc->getInitTg("first"));
+    QString str5 = getNumericString(m_appCalc->getMinusLgKp("first"), "verb" );
+    QString str6 = getNumericString(m_appCalc->getKp("first"), "verb" );
     QString str7 = getNumericString(m_appCalc->
                                              getVolH2OAtAirFlowRatioEqualOne());
     QString str8 = getNumericString(m_appCalc->
                                              getVolCO2AtAirFlowRatioEqualOne());
     QString str9 = getNumericString(m_appCalc->getTheoryOxygenRequire());
     QString str10 = getNumericString(m_appCalc->getAirFlowRatio(),"verb");
-    QString str11 = getNumericString(m_appCalc->getB2(), "verb");
-    QString str12 = getNumericString(m_appCalc->getB1(), "verb");
+    QString str11 = getNumericString(m_appCalc->getB2("first"), "verb");
+    QString str12 = getNumericString(m_appCalc->getB1("first"), "verb");
     QString str13 = getNumericString(m_appCalc->
-                                      getVolCO2AtAirFlowRatioLessOne(), "verb");
+                               getVolCO2AtAirFlowRatioLessOne("first"), "verb");
     QString str14 = getNumericString(m_appCalc->
-                                      getVolCOAtAirFlowRatioLessOne(), "verb");
+                                getVolCOAtAirFlowRatioLessOne("first"), "verb");
     QString str15 = getNumericString(m_appCalc->
-                                      getVolH2OAtAirFlowRatioLessOne(), "verb");
+                               getVolH2OAtAirFlowRatioLessOne("first"), "verb");
     QString str16 = getNumericString(m_appCalc->
-                                      getVolH2AtAirFlowRatioLessOne(), "verb");
+                                getVolH2AtAirFlowRatioLessOne("first"), "verb");
     QString str17 = getNumericString(m_appCalc->
-                                      getVolN2AtAirFlowRatioLessOne(), "verb");
+                                getVolN2AtAirFlowRatioLessOne("first"), "verb");
     QString str18 = getNumericString(m_appCalc->
-                                      getVolSumAtAirFlowRatioLessOne(), "verb");
+                               getVolSumAtAirFlowRatioLessOne("first"), "verb");
     QString str19 = getNumericString(m_appCalc->
-                                 getPressureCO2AtAirFlowRationLessOne(),"verb");
+                          getPressureCO2AtAirFlowRationLessOne("first"),"verb");
     QString str20 = getNumericString(m_appCalc->
-                                 getPressureCOAtAirFlowRationLessOne(),"verb");
+                           getPressureCOAtAirFlowRationLessOne("first"),"verb");
     QString str21 = getNumericString(m_appCalc->
-                                 getPressureH2OAtAirFlowRationLessOne(),"verb");
+                          getPressureH2OAtAirFlowRationLessOne("first"),"verb");
     QString str22 = getNumericString(m_appCalc->
-                                 getPressureH2AtAirFlowRationLessOne(),"verb");
+                           getPressureH2AtAirFlowRationLessOne("first"),"verb");
     QString str23 = getNumericString(m_appCalc->
-                                 getPressureN2AtAirFlowRationLessOne(),"verb");
+                           getPressureN2AtAirFlowRationLessOne("first"),"verb");
 
     res = res.arg(str1).arg(str2).arg(str3).arg(str4).arg(str5).arg(str6)
              .arg(str7).arg(str8).arg(str9).arg(str10).arg(str11).arg(str12)
@@ -208,10 +212,10 @@ QString LatexTextBuilder::getNumericString(double nVal, QString fmt){
     }
     else {
         if (fmt == "verb"){
-            res = QString::number(nVal, 'f', 5);
+            res = QString::number(nVal, 'f', 5).replace(".", "\\mathord{,}");
         }
         else {
-            res = QString::number(nVal, 'f', 1);
+            res = QString::number(nVal, 'f', 1).replace(".", "\\mathord{,}");
         }
     }
 
