@@ -105,6 +105,23 @@ void GasExplosionCalc::setFirstValueInitTg(double val){
     }
 }
 
+double GasExplosionCalc::getInitAccurateTg(QString stage){
+    double res;
+    if (stage == "first") {
+        res = m_init_accurate_avgT;
+    }
+    else {
+        res = m_avgT;
+    }
+    return res;
+}
+
+void GasExplosionCalc::setFirstValueInitAccurateTg(double val){
+    if (m_calcIterationCounter == 1) {
+        m_init_accurate_avgT = val;
+    }
+}
+
 double GasExplosionCalc::getTheoryOxygenRequire(QString stage){
     double res;
     if (stage == "first"){
@@ -384,6 +401,48 @@ void GasExplosionCalc::setFirstValuePressureN2AtAirFlowRationLessOne(double v){
     }
 }
 
+double GasExplosionCalc::getEnthalpy(QString stage){
+    double res;
+    if (stage == "first"){
+        res = m_init_enthalpy;
+    }
+    else {
+        res = m_enthalpy;
+    }
+    return res;
+}
+
+void GasExplosionCalc::setFirstValueEnthalpy(double val){
+    if (m_calcIterationCounter == 1){
+        m_init_enthalpy = val;
+    }
+}
+
+double GasExplosionCalc::getGasHeatLoss(QString stage){
+    double res;
+    if (stage == "first"){
+        res = m_init_gasHeatLoss;
+    }
+    else {
+        res = m_gasHeatLoss;
+    }
+    return res;
+}
+
+void GasExplosionCalc::setFirstValueGasHeatLoss(double value){
+    if (m_calcIterationCounter == 1){
+        m_init_gasHeatLoss = value;
+    }
+}
+
+int GasExplosionCalc::getCalcIterationCounter(){
+    return m_calcIterationCounter;
+}
+
+double GasExplosionCalc::getAaccuracyCalcAvgT(){
+    return m_accuracyCalcAvgT;
+}
+
 void GasExplosionCalc::getResult(){
     qDebug() << "[II] Calculation run now!";
     m_calcIterationCounter = 0;
@@ -551,7 +610,6 @@ void GasExplosionCalc::runStage04(){
     // 4. По уровнению теплового баланса уточняется значение температуры
     //    и при необходимости осуществляется возврат к п.1 (runStage01);
 
-    int counterT = 0;
     double newAvgT = m_avgT;
     double oldAvgT = 0;
     double deltaQ = 0;
@@ -562,27 +620,31 @@ void GasExplosionCalc::runStage04(){
                            + 1.424*m_pressureH2AtAirFlowRationLessOne
                            + 2.449*m_pressureCO2AtAirFlowRationLessOne
                            + 2.001*m_pressureH2OAtAirFlowRationLessOne)*2200.0;
+        setFirstValueEnthalpy(m_enthalpy);
         qDebug() << "[II] Enthalpy (I) = " << m_enthalpy;
 
         // Теплота химического недожёга продуктов неполного горения, МДж/м^3
-        double gasHeatLoss = (12.65*m_pressureCOAtAirFlowRationLessOne
+        m_gasHeatLoss = (12.65*m_pressureCOAtAirFlowRationLessOne
                           + 10.77*m_pressureH2AtAirFlowRationLessOne)*
                                                   m_volSumAtAirFlowRatioLessOne;
-
-        qDebug() << "[II] qHeatLoss = " << gasHeatLoss;
+        setFirstValueGasHeatLoss(m_gasHeatLoss);
+        qDebug() << "[II] qHeatLoss = " << m_gasHeatLoss;
 
         oldAvgT = newAvgT;
-        deltaQ = m_gasHeatOfCombustion - gasHeatLoss;
+        deltaQ = m_gasHeatOfCombustion - m_gasHeatLoss;
         if (oldAvgT >= 950){
             newAvgT = ((deltaQ*1000.0)/(m_volSumAtAirFlowRatioLessOne*m_enthalpy)
                                                                   + 0.075)*2050;
+            setFirstValueInitAccurateTg(newAvgT);
             qDebug() << "[II] T > 950; T' =" << newAvgT;
         }
         else{
+            // Опечатка в методических указаниях(?)
             // newAvgT=(m_enthalpy+0.3*(deltaQ*1000.0)/m_volSumAtAirFlowRatioLessOne)/
             //     ((2695*deltaQ*1000)/(m_volSumAtAirFlowRatioLessOne));
             newAvgT=((2695*deltaQ*1000)/(m_volSumAtAirFlowRatioLessOne))/
                 (m_enthalpy+0.3*(deltaQ*1000.0)/m_volSumAtAirFlowRatioLessOne);
+                setFirstValueInitAccurateTg(newAvgT);
                 qDebug() << "[II] T < 950; T' =" << newAvgT;
         }
 
@@ -590,11 +652,11 @@ void GasExplosionCalc::runStage04(){
         runStage01(newAvgT);
         runStage02();
         runStage03();
-        counterT++;
     }
 
     while (fabs(newAvgT - oldAvgT) > m_accuracyCalcAvgT );
-    qDebug() << "[II] Update m_avgT: " << m_avgT << ", N = " << counterT;
+    qDebug() << "[II] Update m_avgT: " << m_avgT << ", N = " <<
+                                                        m_calcIterationCounter;
 }
 
 // End gasExplosionCalc.cpp

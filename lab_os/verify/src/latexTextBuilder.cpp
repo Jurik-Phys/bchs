@@ -17,7 +17,7 @@ QString LatexTextBuilder::getTextStage01(){
     QString res;
     res = R"(
         \text{1. Задаётся средняя температура $(T_{g})$ зоны горения в первом }
-        \text{приближении, $^{\Large{\circ}}$C.}\\
+        \text{приближении, $^{\text{\LARGE{\circ}}}$C.}\\
         \begin{align}
             T_{g} =  %1.
         \end{align}
@@ -201,6 +201,163 @@ QString LatexTextBuilder::getTextStage03(){
              .arg(str7).arg(str8).arg(str9).arg(str10).arg(str11).arg(str12)
              .arg(str13).arg(str14).arg(str15).arg(str16).arg(str17).arg(str18)
              .arg(str19).arg(str20).arg(str21).arg(str22).arg(str23);
+
+    return res;
+}
+
+QString LatexTextBuilder::getTextStage04(){
+    QString res, res0, res1a, res1b, res2;
+
+    QString str1 = getNumericString(m_appCalc->
+                           getPressureN2AtAirFlowRationLessOne("first"),"verb");
+    QString str2 = getNumericString(m_appCalc->
+                           getPressureCOAtAirFlowRationLessOne("first"),"verb");
+    QString str3 = getNumericString(m_appCalc->
+                           getPressureH2AtAirFlowRationLessOne("first"),"verb");
+    QString str4 = getNumericString(m_appCalc->
+                          getPressureCO2AtAirFlowRationLessOne("first"),"verb");
+    QString str5 = getNumericString(m_appCalc->
+                          getPressureH2OAtAirFlowRationLessOne("first"),"verb");
+    QString str6 = getNumericString(m_appCalc->getEnthalpy("first"),"verb");
+    QString str7 = getNumericString(m_appCalc->
+                                getVolSumAtAirFlowRatioLessOne("first"),"verb");
+    QString str8 = getNumericString(m_appCalc->getGasHeatLoss("first"),"verb");
+    QString str9 = getNumericString(m_appCalc->getGasHeatOfCombustion());
+    QString str10 =getNumericString(m_appCalc->getInitAccurateTg("first"));
+
+    res0 = R"(
+        \text{4. По уровнению теплового баланса уточняется значение температуры}
+        \\
+        \text{ и при необходимости осуществляется возврат к п.1.}
+        \\
+        \text{    Энтальпия $(I)$ продуктов сгорания при }
+        \text{$2200^{\text{\,\LARGE\circ}}$C, кДж/м$^3$.}
+        \\
+        \begin{align}
+            I & = \left( 1\mathord{,}465 \cdot P_{N_2}
+                + 1\mathord{,}516 \cdot P_{CO}
+                + 1\mathord{,}424 \cdot P_{H_2}
+                + 2\mathord{,}449 \cdot P_{CO_2}
+                + 2\mathord{,}001 \cdot P_{H_2 0}\right) \cdot 2200 = \\
+              & = ( 1\mathord{,}465 \cdot {%1}
+                + 1\mathord{,}516 \cdot {%2}
+                + 1\mathord{,}424 \cdot {%3}
+                + 2\mathord{,}449 \cdot {%4}
+                + 2\mathord{,}001 \cdot {%5} )\ \times \\
+              & \times\ 2200 = {%6}.
+        \end{align}
+        \\
+        \text{    Теплота химического недожога $(Q_\text{н})$ продуктов}
+        \text{неполного горения, МДж/м$^3$.}\\
+        \begin{gather}
+            Q_\text{н} = ( 12\mathord{,}65 \cdot P_{CO}
+                        + 10\mathord{,}77 \cdot P_{H_2} ) \cdot
+                                                        V_{\text{ПГ}}^{n<1}\ =\\
+                       = ( 12\mathord{,}65 \cdot {%2}
+                        + 10\mathord{,}77 \cdot {%3} ) \cdot {%7} = {%8}.
+        \end{gather}
+        \\
+        \text{    Уточнение средней температуры $T_g$ зоны горения, }
+        \text{$^{\LARGE\circ}$C}.
+        \\
+    )";
+    res0 = res0.arg(str1).arg(str2).arg(str3).arg(str4).arg(str5).arg(str6)
+             .arg(str7).arg(str8);
+
+    // Температура газа > 950
+    res1a = R"(
+        \text{    При $T_g \ge 950$.}
+        \\
+        \begin{align}
+            T_g & = \left (
+                    \frac{(Q - Q_{\text{н}})\cdot 1000}
+                         {V_{\text{ПГ}}^{n<1} \cdot I} + 0\mathord{,}075
+                  \right ) \cdot 2050 = \\
+                & = \left (
+                    \frac{({%1} - {%2})\cdot 1000}
+                         {{%3}\cdot {%4}} + 0\mathord{,}075
+                  \right ) \cdot 2050 = {%5}.
+        \end{align}
+        \\
+        \text{    При $T_g < 950$.}
+        \\
+        \begin{gather}
+            T_g =
+            \frac{ \left (
+                  2695 \cdot \frac{(Q - Q_{\text{н}})\cdot 1000}
+                                                        {V_{\text{ПГ}}^{n<1}}
+                                                                       \right )}
+            { \left (
+                I + 0,3 \cdot
+                     \frac{(Q - Q_{\text{н})\cdot 1000}}{V_{\text{ПГ}}^{n < 1}}
+                                                                      \right )}.
+        \end{gather}
+    )";
+
+    res1a = res1a.arg(str9).arg(str8).arg(str7).arg(str6).arg(str10);
+
+    res1b = R"(
+        \text{    При $T_g \ge 950$.}
+        \\
+        \begin{align}
+            T_g & = \left (
+                    \frac{(Q - Q_{\text{н}})\cdot 1000}
+                         {V_{\text{ПГ}}^{n<1} \cdot I} + 0\mathord{,}075
+                  \right ) \cdot 2050.
+            \\
+        \end{align}
+        \\
+        \text{    При $T_g < 950$.}
+        \\
+        \begin{gather}
+            T_g =
+            \frac{ \left (
+                  2695 \cdot \frac{(Q - Q_{\text{н}})\cdot 1000}
+                                                        {V_{\text{ПГ}}^{n<1}}
+                                                                       \right )}
+            { \left (
+                I + 0,3 \cdot
+                      \frac{(Q - Q_{\text{н})\cdot 1000}}{V_{\text{ПГ}}^{n < 1}}
+                                                                    \right )}
+                =
+            \frac{ \left (
+                  2695 \cdot \frac{({%2} - {%3})\cdot 1000}
+                                                        {{%4}}
+                                                                       \right )}
+            { \left (
+                {%1} + 0,3 \cdot
+                     \frac{({%2} - {%3})\cdot 1000}{{%4}} \right )}\ = {%5}
+        \end{gather}
+    )";
+
+    res1b = res1b.arg(str6).arg(str9).arg(str8).arg(str7).arg(str10);
+
+
+    res2 = R"(
+        \\
+        \text{    После {%1} итераций пунктов 1 - 3 средняя температура зоны }
+        \text{горения: }
+        \\
+        \begin{gather}
+            $T_g = {%2}$
+        \end{gather}
+        \\
+        \text{    Tочность расчёта между последними итерациями $\Delta T <{%3}$}
+        \text{$^{\text{\LARGE\circ}}$C}
+    )";
+
+    QString str11 = getNumericString(m_appCalc->getCalcIterationCounter());
+    QString str12 = getNumericString(m_appCalc->getInitTg());
+    QString str13 = getNumericString(m_appCalc->getAaccuracyCalcAvgT());
+
+    res2 = res2.arg(str11).arg(str12).arg(str13);
+
+    if (m_appCalc->getInitTg("first") >= 950) {
+        res = res0 + res1a + res2;
+    }
+    else {
+        res = res0 + res1b + res2;
+    }
 
     return res;
 }

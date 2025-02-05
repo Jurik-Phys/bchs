@@ -53,6 +53,10 @@ class GasExplosionCalc {
         double getInitTg(QString stage = "last");
         void   setFirstValueInitTg(double val);
 
+        // Средняя температура зоны горения после уточнения
+        double getInitAccurateTg(QString = "last");
+        void   setFirstValueInitAccurateTg(double val);
+
         void getResult();
 
         double getTheoryOxygenRequire(QString stage = "last");
@@ -84,15 +88,21 @@ class GasExplosionCalc {
         double getPressureH2OAtAirFlowRationLessOne(QString stage = "last");
         double getPressureH2AtAirFlowRationLessOne(QString stage = "last");
         double getPressureN2AtAirFlowRationLessOne(QString stage = "last");
+        double getEnthalpy(QString stage = "last");
+        void   setFirstValueEnthalpy(double);
+        double getGasHeatLoss(QString stage = "last");
+        double getAaccuracyCalcAvgT();
+        void   setFirstValueGasHeatLoss(double);
         void   setFirstValuePressureCO2AtAirFlowRationLessOne(double);
         void   setFirstValuePressureCOAtAirFlowRationLessOne(double);
         void   setFirstValuePressureH2OAtAirFlowRationLessOne(double);
         void   setFirstValuePressureH2AtAirFlowRationLessOne(double);
         void   setFirstValuePressureN2AtAirFlowRationLessOne(double);
+        int getCalcIterationCounter();
 
     private:
         // Initial data from users input //
-        double m_avgT, m_init_avgT;
+        double m_avgT, m_init_avgT, m_init_accurate_avgT;
         double m_carbonAtomCount;
         double m_hydrogenAtomCount;
         double m_gasHeatOfCombustion;
@@ -146,7 +156,9 @@ class GasExplosionCalc {
                                         m_init_pressureN2AtAirFlowRationLessOne;
 
         // Энтальпия продуктов сгорания при 2200 град. Цельсия
-        double m_enthalpy;
+        double m_enthalpy, m_init_enthalpy;
+
+        double m_gasHeatLoss, m_init_gasHeatLoss;
 
         // Точность уточнения температуры на 4-ом этапе;
         double m_accuracyCalcAvgT = 0.1;
