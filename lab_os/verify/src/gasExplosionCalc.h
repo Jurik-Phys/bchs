@@ -99,7 +99,10 @@ class GasExplosionCalc {
         void   setFirstValuePressureH2AtAirFlowRationLessOne(double);
         void   setFirstValuePressureN2AtAirFlowRationLessOne(double);
         int getCalcIterationCounter();
+        double getFireBallRadius();
 
+        const double m_PI = 3.141592653589793;
+        double getPI();
     private:
         // Initial data from users input //
         double m_avgT, m_init_avgT, m_init_accurate_avgT;
@@ -163,12 +166,16 @@ class GasExplosionCalc {
         // Точность уточнения температуры на 4-ом этапе;
         double m_accuracyCalcAvgT = 0.1;
 
+        // Счётчик итераций на 4-ом этапе
         int m_calcIterationCounter;
+
+        double m_fireBallRadius;
 
         void runStage01(double initT = 1400.0);
         void runStage02();
         void runStage03();
         void runStage04();
+        void runStage05();
 
 };
 

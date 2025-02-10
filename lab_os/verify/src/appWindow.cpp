@@ -101,6 +101,7 @@ void QAppWindow::gasExplosionCalculation(){
     addToTexFrame(m_latexTextBuilder->getTextStage02());
     addToTexFrame(m_latexTextBuilder->getTextStage03());
     addToTexFrame(m_latexTextBuilder->getTextStage04());
+    addToTexFrame(m_latexTextBuilder->getTextStage05());
 }
 
 void QAppWindow::setTexFrame(){

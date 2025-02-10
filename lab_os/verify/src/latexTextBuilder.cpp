@@ -335,14 +335,15 @@ QString LatexTextBuilder::getTextStage04(){
 
     res2 = R"(
         \\
-        \text{    После {%1} итераций пунктов 1 - 3 средняя температура зоны }
+        \text{    После {%1} итераций п. 1 - 4 средняя температура зоны }
         \text{горения: }
         \\
         \begin{gather}
             $T_g = {%2}$
         \end{gather}
         \\
-        \text{    Tочность расчёта между последними итерациями $\Delta T <{%3}$}
+        \text{    Tочность расчёта температуры между последними итерациями }
+        \text{$\Delta T <{%3}$}
         \text{$^{\text{\LARGE\circ}}$C}
     )";
 
@@ -358,6 +359,40 @@ QString LatexTextBuilder::getTextStage04(){
     else {
         res = res0 + res1b + res2;
     }
+
+    return res;
+}
+
+QString LatexTextBuilder::getTextStage05(){
+    QString res;
+    res = R"(
+        \text{5. С учётом плотности и массы углеводородного газа, находившегося}
+        \text{ в резервуаре,}
+        \\
+        \text{определяются размеры газовоздушного облака.}
+        \\
+        \text{    Средний радиус $(R)$ зоны горения (огневого шара), м.}
+        \\
+        \begin{align}
+        R & = \sqrt[3]{\frac{3}{4\cdot\pi}\cdot
+                     \frac{G\cdot 1000 \cdot V_{\text{ПГ}}^{n<1}}{\rho_0}\cdot
+                     \left(\frac{T_g + 273}{273}\right)} =
+                     \\
+          & = \sqrt[3]{\frac{3}{4\cdot{%1}}\cdot
+                     \frac{{%2}\cdot 1000 \cdot {%3}}{{%4}}\cdot
+                     \left(\frac{{%5} + 273}{273}\right)} = %6
+        \end{align}
+        \\
+    )";
+    QString str1 = getNumericString(m_appCalc->getPI(), "verb");
+    QString str2 = getNumericString(m_appCalc->getGasMass());
+    QString str3 = getNumericString(m_appCalc->
+                                      getVolSumAtAirFlowRatioLessOne(), "verb");
+    QString str4 = getNumericString(m_appCalc->getGasDensity());
+    QString str5 = getNumericString(m_appCalc->getInitTg());
+    QString str6 = getNumericString(m_appCalc->getFireBallRadius(), "verb");
+
+    res = res.arg(str1).arg(str2).arg(str3).arg(str4).arg(str5).arg(str6);
 
     return res;
 }

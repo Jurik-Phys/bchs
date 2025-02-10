@@ -443,6 +443,14 @@ double GasExplosionCalc::getAaccuracyCalcAvgT(){
     return m_accuracyCalcAvgT;
 }
 
+double GasExplosionCalc::getFireBallRadius(){
+    return m_fireBallRadius;
+}
+
+double GasExplosionCalc::getPI(){
+    return m_PI;
+}
+
 void GasExplosionCalc::getResult(){
     qDebug() << "[II] Calculation run now!";
     m_calcIterationCounter = 0;
@@ -451,6 +459,7 @@ void GasExplosionCalc::getResult(){
     runStage02();
     runStage03();
     runStage04();
+    runStage05();
 }
 
 void GasExplosionCalc::runStage01(double initT){
@@ -657,6 +666,18 @@ void GasExplosionCalc::runStage04(){
     while (fabs(newAvgT - oldAvgT) > m_accuracyCalcAvgT );
     qDebug() << "[II] Update m_avgT: " << m_avgT << ", N = " <<
                                                         m_calcIterationCounter;
+}
+
+void GasExplosionCalc::runStage05(){
+    // 5. С учётом плотности и массы углеводородного газа, находившегося
+    //    в резервуаре, определяются размеры газовоздушного облака.
+
+    double num = (3.0/(4*m_PI)) *
+                 (m_gasMass*1000.0*m_volSumAtAirFlowRatioLessOne/m_gasDensity) *
+                 ((m_avgT + 273.0)/273.0);
+    m_fireBallRadius =  pow(num, 1.0/3.0);
+
+    qDebug() << "[II] Fire ball radius: " << m_fireBallRadius;
 }
 
 // End gasExplosionCalc.cpp
