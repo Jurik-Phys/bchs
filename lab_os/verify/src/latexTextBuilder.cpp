@@ -339,19 +339,43 @@ QString LatexTextBuilder::getTextStage04(){
         \text{горения: }
         \\
         \begin{gather}
-            $T_g = {%2}$
+            T_g = {%2}.
         \end{gather}
         \\
         \text{    Tочность расчёта температуры между последними итерациями }
         \text{$\Delta T <{%3}$}
-        \text{$^{\text{\LARGE\circ}}$C}
+        \text{$^{\text{ \LARGE\circ}}$C.}
+        \\
+        \text{    Уточнённое значение парциального давления $(P)$ в продуктах }
+        \\
+        \text{ неполного горения углеводородного газа, }
+        \text{при $T_g = %2^{\text{ \LARGE\circ}}$C$.}
+        \\
+        \begin{align}
+            P_{CO_2}  & = {%4}. \\
+            P_{CO}    & = {%5}. \\
+            P_{H_2 O} & = {%6}. \\
+            P_{H_2}   & = {%7}. \\
+            P_{N_2}   & = {%8}.
+        \end{align}
     )";
 
     QString str11 = getNumericString(m_appCalc->getCalcIterationCounter());
     QString str12 = getNumericString(m_appCalc->getInitTg());
     QString str13 = getNumericString(m_appCalc->getAaccuracyCalcAvgT());
+    QString str14 = getNumericString(m_appCalc->
+                               getPressureCO2AtAirFlowRationLessOne(), "verb");
+    QString str15 = getNumericString(m_appCalc->
+                               getPressureCOAtAirFlowRationLessOne(), "verb");
+    QString str16 = getNumericString(m_appCalc->
+                               getPressureH2OAtAirFlowRationLessOne(), "verb");
+    QString str17 = getNumericString(m_appCalc->
+                               getPressureH2AtAirFlowRationLessOne(), "verb");
+    QString str18 = getNumericString(m_appCalc->
+                               getPressureN2AtAirFlowRationLessOne(), "verb");
 
-    res2 = res2.arg(str11).arg(str12).arg(str13);
+    res2 = res2.arg(str11).arg(str12).arg(str13).arg(str14).arg(str15).
+                arg(str16).arg(str17).arg(str18);
 
     if (m_appCalc->getInitTg("first") >= 950) {
         res = res0 + res1a + res2;
@@ -380,7 +404,7 @@ QString LatexTextBuilder::getTextStage05(){
                      \\
           & = \sqrt[3]{\frac{3}{4\cdot{%1}}\cdot
                      \frac{{%2}\cdot 1000 \cdot {%3}}{{%4}}\cdot
-                     \left(\frac{{%5} + 273}{273}\right)} = %6
+                     \left(\frac{{%5} + 273}{273}\right)} = %6.
         \end{align}
         \\
     )";
@@ -393,6 +417,58 @@ QString LatexTextBuilder::getTextStage05(){
     QString str6 = getNumericString(m_appCalc->getFireBallRadius(), "verb");
 
     res = res.arg(str1).arg(str2).arg(str3).arg(str4).arg(str5).arg(str6);
+
+    return res;
+}
+
+QString LatexTextBuilder::getTextStage06(){
+    QString res;
+    res = R"(
+        \text{6. По температуре и размеру зоны горения, по количеству }
+        \text{излучающих газов}
+        \\
+        \text{рассчитывается степень черноты ($\epsilon$) горящего облака.}
+        \\
+        \text{    Эффективная длина луча ($S_{\text{эф}}$) в огневом шаре, м.}
+        \\
+        \begin{gather}
+            S_\text{эф} = 1,3 \cdot R = 1,3 \cdot {%1} = {%2}.
+        \end{gather}
+        \\
+        \text{    Коэффициент ослабления лучей ($K_\text{Г}$)}.
+        \\
+        \begin{align}
+            K_\text{Г} & = \frac{0,8 + 1,6 \cdot P_{H_2O}}
+                {\sqrt{(P_{H_2O} + P_{CO_2})\cdot S_\text{эф}}}\cdot
+                \left( 1 - 0,38 \cdot \frac{T_g + 273}{1000}\right) =
+                \\
+            & = \frac{0,8 + 1,6 \cdot {%3}}
+                {\sqrt{({%3} + {%4})\cdot {%2}}}\cdot
+                \left( 1 - 0,38 \cdot \frac{{%5} + 273}{1000}\right) = {%6}.
+        \end{align}
+        \\
+        \text{    Степень черноты огневого шара ($\epsilon$).}
+        \\
+        \begin{gather}
+            \epsilon =
+            1 - e^{\left(-K_\text{Г} \cdot S_\text{эф} \cdot
+                                                 ( P_{H2 O} + P_{CO_2}\right)} =
+            1 - e^{\left(-{%6} \cdot {%2} \cdot ({%3} + {%4} \right)} = {%7}.
+        \end{gather}
+    )";
+
+    QString str1 = getNumericString(m_appCalc->getFireBallRadius());
+    QString str2 = getNumericString(m_appCalc->getEffPath());
+    QString str3 = getNumericString(m_appCalc->
+                                getPressureH2OAtAirFlowRationLessOne(), "verb");
+    QString str4 = getNumericString(m_appCalc->
+                                getPressureCO2AtAirFlowRationLessOne(), "verb");
+    QString str5 = getNumericString(m_appCalc->getInitAccurateTg());
+    QString str6 = getNumericString(m_appCalc->getRayDecreaseFactor(), "verb");
+    QString str7 = getNumericString(m_appCalc->getFireBallBlackness(), "verb");
+
+    res = res.arg(str1).arg(str2).arg(str3).arg(str4).arg(str5).arg(str6).
+              arg(str7);
 
     return res;
 }

@@ -100,6 +100,9 @@ class GasExplosionCalc {
         void   setFirstValuePressureN2AtAirFlowRationLessOne(double);
         int getCalcIterationCounter();
         double getFireBallRadius();
+        double getEffPath();
+        double getRayDecreaseFactor();
+        double getFireBallBlackness();
 
         const double m_PI = 3.141592653589793;
         double getPI();
@@ -169,13 +172,24 @@ class GasExplosionCalc {
         // Счётчик итераций на 4-ом этапе
         int m_calcIterationCounter;
 
+        // Средний радиус зоны горения (огневого шара)
         double m_fireBallRadius;
+
+        // Эффективная длина луча в огневом шаре
+        double m_effPath;
+
+        // Коэффициент ослабления лучей
+        double m_rayDecreaseFactor;
+
+        // Степень черноты огневого шара
+        double m_fireBallBlackness;
 
         void runStage01(double initT = 1400.0);
         void runStage02();
         void runStage03();
         void runStage04();
         void runStage05();
+        void runStage06();
 
 };
 

@@ -447,6 +447,17 @@ double GasExplosionCalc::getFireBallRadius(){
     return m_fireBallRadius;
 }
 
+double GasExplosionCalc::getEffPath(){
+    return m_effPath;
+}
+double GasExplosionCalc::getRayDecreaseFactor(){
+    return m_rayDecreaseFactor;
+}
+
+double GasExplosionCalc::getFireBallBlackness(){
+    return m_fireBallBlackness;
+}
+
 double GasExplosionCalc::getPI(){
     return m_PI;
 }
@@ -460,6 +471,7 @@ void GasExplosionCalc::getResult(){
     runStage03();
     runStage04();
     runStage05();
+    runStage06();
 }
 
 void GasExplosionCalc::runStage01(double initT){
@@ -671,6 +683,7 @@ void GasExplosionCalc::runStage04(){
 void GasExplosionCalc::runStage05(){
     // 5. С учётом плотности и массы углеводородного газа, находившегося
     //    в резервуаре, определяются размеры газовоздушного облака.
+    qDebug() << "\n[**] > Stage 05 <";
 
     double num = (3.0/(4*m_PI)) *
                  (m_gasMass*1000.0*m_volSumAtAirFlowRatioLessOne/m_gasDensity) *
@@ -678,6 +691,27 @@ void GasExplosionCalc::runStage05(){
     m_fireBallRadius =  pow(num, 1.0/3.0);
 
     qDebug() << "[II] Fire ball radius: " << m_fireBallRadius;
+}
+
+void GasExplosionCalc::runStage06(){
+    // 6. По температуре и размеру зоны горения, по количеству излучающих газов
+    //    рассчитывается степень черноты (ε) горящего облака.
+    qDebug() << "\n[**] > Stage 06 <";
+
+    m_effPath = 1.3 * m_fireBallRadius;
+    qDebug() << "[II] effPath:" << m_effPath;
+
+    m_rayDecreaseFactor = (
+            (0.8 + 1.6*m_pressureH2OAtAirFlowRationLessOne)/
+                (pow((m_pressureH2OAtAirFlowRationLessOne +
+                           m_pressureCO2AtAirFlowRationLessOne)*m_effPath,0.5))
+            )*(1 - 0.38*(m_avgT + 273.0)/1000.0);
+    qDebug() << "[II] m_rayDecreaseFactor:" << m_rayDecreaseFactor;
+
+    m_fireBallBlackness = 1 - exp(-1.0 * m_rayDecreaseFactor * m_effPath *
+                                (m_pressureH2OAtAirFlowRationLessOne +
+                                       m_pressureCO2AtAirFlowRationLessOne));
+    qDebug() << "[II] m_fireBallBlackness:" << m_fireBallBlackness;
 }
 
 // End gasExplosionCalc.cpp

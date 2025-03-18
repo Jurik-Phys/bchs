@@ -17,6 +17,7 @@ class LatexTextBuilder {
         QString getTextStage03();
         QString getTextStage04();
         QString getTextStage05();
+        QString getTextStage06();
 
     private:
         GasExplosionCalc* m_appCalc;
