@@ -98,14 +98,18 @@ class GasExplosionCalc {
         void   setFirstValuePressureH2OAtAirFlowRationLessOne(double);
         void   setFirstValuePressureH2AtAirFlowRationLessOne(double);
         void   setFirstValuePressureN2AtAirFlowRationLessOne(double);
-        int getCalcIterationCounter();
+        int    getCalcIterationCounter();
         double getFireBallRadius();
         double getEffPath();
         double getRayDecreaseFactor();
         double getFireBallBlackness();
+        double getFireBallSquare();
+        double getFireBallEnergyPower();
 
         const double m_PI = 3.141592653589793;
+        const double m_Sigma = 5.67E-8;
         double getPI();
+        double getSigma();
     private:
         // Initial data from users input //
         double m_avgT, m_init_avgT, m_init_accurate_avgT;
@@ -184,12 +188,19 @@ class GasExplosionCalc {
         // Степень черноты огневого шара
         double m_fireBallBlackness;
 
+        // Площадь внешней поверхности огневого шара;
+        double m_fireBallSquare;
+
+        // Поток энергии инфракрасного излучения огневого шара
+        double m_fireBallEnergyPower;
+
         void runStage01(double initT = 1400.0);
         void runStage02();
         void runStage03();
         void runStage04();
         void runStage05();
         void runStage06();
+        void runStage07();
 
 };
 

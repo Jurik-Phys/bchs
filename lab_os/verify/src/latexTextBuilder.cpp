@@ -473,18 +473,78 @@ QString LatexTextBuilder::getTextStage06(){
     return res;
 }
 
-QString LatexTextBuilder::getNumericString(double nVal, QString fmt){
+QString LatexTextBuilder::getTextStage07(){
     QString res;
-    if (fabs(nVal - (int)nVal) < 1E-6){
-        res = QString::number(nVal, 'f', 0);
+    res = R"(
+        \text{7. По степени черноты, температуре и величине внешней }
+        \text{поверхности зоны }
+        \\
+        \text{горения определяется интегральный поток }
+        \text{собственного излучения ($E_\text{соб}$)}
+        \\
+        \text{огневого шара.}
+        \\
+        \text{    Постоянная Стефана - Больцмана для излучения абсолютно }
+        \text{чёрного тела ($\sigma_0$),}
+        \\
+        \text{Вт/(м$^2\cdot$K$^4$).}
+        \\
+        \begin{align}
+            \sigma_0 = {%1}.
+        \end{align}
+        \\
+        \text{    Площадь внешней поверхности огневого шара ($F$), м$^2$.}
+        \\
+        \begin{align}
+            F = 4 \cdot \pi \cdot R^2 = 4 \cdot {%2} \cdot {%3}^2 = {%4}.
+        \end{align}
+        \\
+        \text{    Поток энергии инфракрасного излучения от огневого шара, Вт.}
+        \\
+        \begin{align}
+            E_\text{соб} = \sigma_0 \cdot \epsilon \cdot (T_g + 273)^4 =
+            {%1} \cdot {%5} \cdot ({%6}+ 273) = {%7} = {%8}
+        \end{align}
+    )";
+    QString str1 = getNumericString(m_appCalc->getSigma(), "pow");
+    QString str2 = getNumericString(m_appCalc->getPI(),"verb");
+    QString str3 = getNumericString(m_appCalc->getFireBallRadius());
+    QString str4 = getNumericString(m_appCalc->getFireBallSquare());
+    QString str5 = getNumericString(m_appCalc->getFireBallBlackness());
+    QString str6 = getNumericString(m_appCalc->getInitTg());
+    QString str7 = getNumericString(m_appCalc->getFireBallEnergyPower());
+    QString str8 = getNumericString(m_appCalc->getFireBallEnergyPower(), "pow");
+
+    res = res.arg(str1).arg(str2).arg(str3).arg(str4).arg(str5).
+              arg(str6).arg(str7).arg(str8);
+    return res;
+}
+
+QString LatexTextBuilder::getNumericString(double nVal, QString fmt){
+    // fmt: "pow", "verb"
+    QString res;
+
+    if (fmt == "pow"){
+        QString exp;
+        exp = QString::number(nVal, 'e', 2).replace(".", "\\mathord{,}");
+
+        QStringList numParts = exp.split('e');
+        QString mantissa = numParts[0];
+        QString exponent = QString::number(numParts[1].toInt());
+        res = mantissa + " \\cdot 10^{" + exponent + "}";
     }
     else {
-        if (fmt == "verb"){
-            res = QString::number(nVal, 'f', 5).replace(".", "\\mathord{,}");
+        if (fabs(nVal - (int)nVal) < 1E-6){
+            res = QString::number(nVal, 'f', 0);
         }
         else {
-            res = QString::number(nVal, 'f', 1).replace(".", "\\mathord{,}");
-        }
+            if (fmt == "verb"){
+                res = QString::number(nVal, 'f', 5).replace(".", "\\mathord{,}");
+            }
+            else {
+                res = QString::number(nVal, 'f', 1).replace(".", "\\mathord{,}");
+            }
+       }
     }
 
     return res;
