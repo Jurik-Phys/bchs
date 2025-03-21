@@ -458,12 +458,20 @@ double GasExplosionCalc::getFireBallBlackness(){
     return m_fireBallBlackness;
 }
 
-double GasExplosionCalc::getFireBallSquare(){
-    return m_fireBallSquare;
+double GasExplosionCalc::getFireBallArea(){
+    return m_fireBallArea;
 }
 
 double GasExplosionCalc::getFireBallEnergyPower(){
     return m_fireBallEnergyPower;
+}
+
+double GasExplosionCalc::getRaySpreadSphereArea(){
+    return m_raySpreadSphereArea;
+}
+
+double GasExplosionCalc::getQDensity(){
+    return m_qDensity;
 }
 
 double GasExplosionCalc::getPI(){
@@ -485,6 +493,7 @@ void GasExplosionCalc::getResult(){
     runStage05();
     runStage06();
     runStage07();
+    runStage08();
 }
 
 void GasExplosionCalc::runStage01(double initT){
@@ -734,13 +743,32 @@ void GasExplosionCalc::runStage07(){
     //    огненного шара.
     qDebug() << "\n[**] > Stage 07 <";
 
-    m_fireBallSquare = 4.0 * m_PI * pow(m_fireBallRadius, 2.0);
-    qDebug() << "[II] m_fireBallSquare:" << m_fireBallSquare;
+    m_fireBallArea = 4.0 * m_PI * pow(m_fireBallRadius, 2.0);
+    qDebug() << "[II] m_fireBallArea:" << m_fireBallArea;
 
     m_fireBallEnergyPower = m_Sigma * m_fireBallBlackness *
-                                    pow(m_avgT + 273.0, 4.0) * m_fireBallSquare;
+                                    pow(m_avgT + 273.0, 4.0) * m_fireBallArea;
 
     qDebug() << "[II] m_fireBallEnergyPower:" << m_fireBallEnergyPower;
+}
+
+void GasExplosionCalc::runStage08(){
+    // 8. По величине интегрального потока собственного излучения
+    //    и по расстоянию от центра зоны горения до приёмника вычисляется
+    //    величина плотности потока энерги (q) инфракрасного излучения
+    qDebug() << "\n[**] > Stage 07 <";
+
+    m_raySpreadSphereArea = 4.0 * m_PI *
+                              pow(m_fireBallRadius + m_distanceToReceiver, 2.0);
+
+    qDebug() << "[II] m_raySpreadSphereArea:" << m_raySpreadSphereArea;
+
+    m_qDensity = m_Sigma * m_fireBallBlackness *
+                                            pow(m_avgT + 273.0, 4.0) *
+                                                    pow(m_fireBallRadius, 2.0)/
+                              pow(m_fireBallRadius + m_distanceToReceiver, 2.0);
+
+    qDebug() << "[II] m_qDensity:" << m_qDensity;
 }
 
 // End gasExplosionCalc.cpp

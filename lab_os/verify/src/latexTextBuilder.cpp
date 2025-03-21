@@ -509,7 +509,7 @@ QString LatexTextBuilder::getTextStage07(){
     QString str1 = getNumericString(m_appCalc->getSigma(), "pow");
     QString str2 = getNumericString(m_appCalc->getPI(),"verb");
     QString str3 = getNumericString(m_appCalc->getFireBallRadius());
-    QString str4 = getNumericString(m_appCalc->getFireBallSquare());
+    QString str4 = getNumericString(m_appCalc->getFireBallArea());
     QString str5 = getNumericString(m_appCalc->getFireBallBlackness());
     QString str6 = getNumericString(m_appCalc->getInitTg());
     QString str7 = getNumericString(m_appCalc->getFireBallEnergyPower());
@@ -517,6 +517,54 @@ QString LatexTextBuilder::getTextStage07(){
 
     res = res.arg(str1).arg(str2).arg(str3).arg(str4).arg(str5).
               arg(str6).arg(str7).arg(str8);
+    return res;
+}
+
+QString LatexTextBuilder::getTextStage08(){
+    QString res;
+    res = R"(
+        \text{8. По величине интегрального потока собственного излучения }
+        \text{и по расстоянию}
+        \\
+        \text{от центра зоны горения до приёмника вычисляется величина }
+        \text{плотности потока}
+        \\
+        \text{энергии (q) инфракрасного излучения.}
+        \\
+        \text{    Площадь поверхности условной сферы ($F_\text{у.с.}$),}
+        \text{образованной радиусом, равным}
+        \\
+        \text{расстоянию от центра зоны горения до приёмника}
+        \text{теплового излучения, м$^2$.}
+        \\
+        \begin{gather}
+            F_\text{у.с.} = 4 \cdot \pi \cdot (R + h)^2 =
+               4 \cdot {%1} \cdot ({%2} + {%3})^2 = {%4}.
+        \end{gather}
+        \\
+        \text{    Плотность потока энергкии (q) у приёмника инфракрасного }
+        \text{излучения, Вт/м$^2$.}
+        \\
+        \begin{align}
+            q & = \frac{E_\text{соб}}{F_\text{у.с.}} = \sigma_0 \cdot \epsilon
+                              \cdot (T_g + 273)^4 \cdot \frac{R^2}{(R+h)^2} = \\
+              & = {%5} \cdot {%6} \cdot ( {%7} + 273)^4 \cdot
+                                           \frac{{%2}^2}{({%2}+{%3})^2} = {%8}.
+        \end{align}
+    )";
+
+    QString str1 = getNumericString(m_appCalc->getPI(), "verb");
+    QString str2 = getNumericString(m_appCalc->getFireBallRadius());
+    QString str3 = getNumericString(m_appCalc->getDistanceToReceiver());
+    QString str4 = getNumericString(m_appCalc->getRaySpreadSphereArea());
+    QString str5 = getNumericString(m_appCalc->getSigma(), "pow");
+    QString str6 = getNumericString(m_appCalc->getFireBallBlackness(), "verb");
+    QString str7 = getNumericString(m_appCalc->getInitTg());
+    QString str8 = getNumericString(m_appCalc->getQDensity());
+
+    res = res.arg(str1).arg(str2).arg(str3).arg(str4).arg(str5).arg(str6).
+              arg(str7).arg(str8);
+
     return res;
 }
 

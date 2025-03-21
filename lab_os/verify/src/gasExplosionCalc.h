@@ -103,8 +103,10 @@ class GasExplosionCalc {
         double getEffPath();
         double getRayDecreaseFactor();
         double getFireBallBlackness();
-        double getFireBallSquare();
+        double getFireBallArea();
         double getFireBallEnergyPower();
+        double getRaySpreadSphereArea();
+        double getQDensity();
 
         const double m_PI = 3.141592653589793;
         const double m_Sigma = 5.67E-8;
@@ -189,10 +191,17 @@ class GasExplosionCalc {
         double m_fireBallBlackness;
 
         // Площадь внешней поверхности огневого шара;
-        double m_fireBallSquare;
+        double m_fireBallArea;
 
         // Поток энергии инфракрасного излучения огневого шара
         double m_fireBallEnergyPower;
+
+        // Площадь сферы радиусом от центра горения
+        // до приёмника теплового излучения
+        double m_raySpreadSphereArea;
+
+        // Плотность потока энергии у приёмника инфракрасного излучения
+        double m_qDensity;
 
         void runStage01(double initT = 1400.0);
         void runStage02();
@@ -201,6 +210,7 @@ class GasExplosionCalc {
         void runStage05();
         void runStage06();
         void runStage07();
+        void runStage08();
 
 };
 
