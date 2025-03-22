@@ -107,6 +107,14 @@ class GasExplosionCalc {
         double getFireBallEnergyPower();
         double getRaySpreadSphereArea();
         double getQDensity();
+        double getEyeEnDensity();
+        double getEyeFocus();
+        double getFireBallEyeSize();
+        double getSmokeKinematicViscosity();
+        double getRe();
+        double getTurboFlameSpeed();
+        double getAvgFlameSpeed();
+        double getFireTime();
 
         const double m_PI = 3.141592653589793;
         const double m_Sigma = 5.67E-8;
@@ -203,6 +211,30 @@ class GasExplosionCalc {
         // Плотность потока энергии у приёмника инфракрасного излучения
         double m_qDensity;
 
+        // Удельная энергия, воздействующая на сетчатку глаза
+        double m_eyeEnDensity;
+
+        // Диаметр отражения огневого шара на сетчатке глаза
+        double m_fireBallEyeSize;
+
+        // Фокусное расстояние глаза человека (среднее значение)
+        double m_eyeFocus;
+
+        // Коэффициент кинематической вязкости продуктов горения
+        double m_smokeKinematicViscosity;
+
+        // Критерий Рейнольдса
+        double m_Re;
+
+        // Турбулентная скорость распространения пламени
+        double m_turboFlameSpeed;
+
+        // Среднее значение переменной скорости перемещения фронта горения
+        double m_avgFlameSpeed;
+
+        // Время достижения максимальной температуры зоны горения
+        double m_fireTime;
+
         void runStage01(double initT = 1400.0);
         void runStage02();
         void runStage03();
@@ -211,6 +243,7 @@ class GasExplosionCalc {
         void runStage06();
         void runStage07();
         void runStage08();
+        void runStage09();
 
 };
 

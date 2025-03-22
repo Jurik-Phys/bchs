@@ -474,6 +474,38 @@ double GasExplosionCalc::getQDensity(){
     return m_qDensity;
 }
 
+double GasExplosionCalc::getEyeEnDensity(){
+    return m_eyeEnDensity;
+}
+
+double GasExplosionCalc::getEyeFocus(){
+    return m_eyeFocus;
+}
+
+double GasExplosionCalc::getFireBallEyeSize(){
+    return m_fireBallEyeSize;
+}
+
+double GasExplosionCalc::getSmokeKinematicViscosity(){
+    return m_smokeKinematicViscosity;
+}
+
+double GasExplosionCalc::getRe(){
+    return m_Re;
+}
+
+double GasExplosionCalc::getTurboFlameSpeed(){
+    return m_turboFlameSpeed;
+}
+
+double GasExplosionCalc::getAvgFlameSpeed(){
+    return m_avgFlameSpeed;
+}
+
+double GasExplosionCalc::getFireTime(){
+    return m_fireTime;
+}
+
 double GasExplosionCalc::getPI(){
     return m_PI;
 }
@@ -494,6 +526,7 @@ void GasExplosionCalc::getResult(){
     runStage06();
     runStage07();
     runStage08();
+    runStage09();
 }
 
 void GasExplosionCalc::runStage01(double initT){
@@ -756,7 +789,7 @@ void GasExplosionCalc::runStage08(){
     // 8. По величине интегрального потока собственного излучения
     //    и по расстоянию от центра зоны горения до приёмника вычисляется
     //    величина плотности потока энерги (q) инфракрасного излучения
-    qDebug() << "\n[**] > Stage 07 <";
+    qDebug() << "\n[**] > Stage 08 <";
 
     m_raySpreadSphereArea = 4.0 * m_PI *
                               pow(m_fireBallRadius + m_distanceToReceiver, 2.0);
@@ -769,6 +802,40 @@ void GasExplosionCalc::runStage08(){
                               pow(m_fireBallRadius + m_distanceToReceiver, 2.0);
 
     qDebug() << "[II] m_qDensity:" << m_qDensity;
+}
+
+void GasExplosionCalc::runStage09(){
+    // 9. Определяются значения параметров воздействия.
+    qDebug() << "\n[**] > Stage 09 <";
+
+    m_eyeEnDensity = m_qDensity * m_eyeRadiationTime;
+    qDebug() << "[II] m_eyeEnDensity:" << m_eyeEnDensity;
+
+    // Фокусное расстояние глаза человека (среднее значение)
+    m_eyeFocus = 17.0;
+    m_fireBallEyeSize = m_eyeFocus * 2.0 * m_fireBallRadius /
+                                                           m_distanceToReceiver;
+
+    qDebug() << "[II] m_fireBallEyeSize:" << m_fireBallEyeSize;
+
+    m_smokeKinematicViscosity = 12.2E-6;
+
+    m_Re = 2.0 * m_fireBallRadius * m_normalFlameSpeed /
+                                                      m_smokeKinematicViscosity;
+
+    qDebug() << "[II] m_Re:" << m_Re;
+
+    m_turboFlameSpeed = 0.18 * pow(m_normalFlameSpeed, 0.26) * pow(m_Re, 0.24);
+
+    qDebug() << "[II] m_turboFlameSpeed:" << m_turboFlameSpeed;
+
+    m_avgFlameSpeed = (m_normalFlameSpeed + m_turboFlameSpeed)/2.0;
+
+    qDebug() << "[II] m_avgFlameSpeed:" << m_avgFlameSpeed;
+
+    m_fireTime = 2.0 * m_fireBallRadius / m_avgFlameSpeed;
+
+    qDebug() << "[II] m_fireTime:" << m_fireTime;
 }
 
 // End gasExplosionCalc.cpp

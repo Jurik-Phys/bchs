@@ -568,6 +568,86 @@ QString LatexTextBuilder::getTextStage08(){
     return res;
 }
 
+QString LatexTextBuilder::getTextStage09(){
+    QString res;
+    res = R"(
+        \text{9. Определяются значения параметров воздействия.}
+        \\
+        \text{    Удельная энергия (импульс энергии, $Q_\text{имп}$), }
+        \text{воздействующая}
+        \\
+        \text{на сетчатку глаза, Дж/м$^2$. }
+        \\
+        \begin{align}
+            Q_\text{имп} = q \cdot t_\text{имп} = {%1} \cdot {%2} = {%3}.
+        \end{align}
+        \\
+        \text{    Диаметр (d) отображения огневого шара на сетчатке глаза, мм}
+        \\
+        \begin{align}
+            d = \lambda \cdot \frac{2 \cdot R}{h} = {%4} \cdot
+                                                   \frac{2 \cdot %5}{%6} = {%7}.
+        \end{align}
+        \\
+        \text{    Коэффициент кинематической вязкости продуктов горения (\nu), }
+        \text{м/с$^2$.}
+        \\
+        \begin{gather}
+            \nu = {%8}.
+        \end{gather}
+        \\
+        \text{    Критерий Рейнольдса.}
+        \\
+        \begin{gather}
+            \text{Re} = \frac{2 \cdot R \cdot V_\text{н}}{\nu} =
+                    \frac{2 \cdot {%5} \cdot {%9}}{%8} = {%10}.
+        \end{gather}
+        \\
+        \text{    Турбулентная скорость распространения пламени ($V_\text{т}), }
+        \text{м/c.}
+        \\
+        \begin{align}
+            V_\text{т} = 0,18 \cdot V_\text{н}^{0,26} \cdot \text{Re}^{0,24} =
+            0,18 \cdot {%9}^{0,26} \cdot {%10}^{0,24} = {%11}.
+        \end{align}
+        \\
+        \text{    Среднее значение переменной скорости ($V_\text{ср}$) }
+        \text{перемещения фронта горения, м/c.}
+        \\
+        \begin{align}
+            V_\text{ср} = \frac{V_\text{н} + V_\text{т}}{2} = \frac{{%9}+{%11}}
+                                                                {2} = {%12}.
+        \end{align}
+        \\
+        \text{    Время достижения максимальной температуры зоны горения, с.}
+        \\
+        \begin{align}
+            t = \frac{2 \cdot R}{V_\text{ср}} = \frac{2 \cdot %5}{%12} = {%13}.
+        \end{align}
+    )";
+
+    QString str1 = getNumericString(m_appCalc->getQDensity());
+    QString str2 = getNumericString(m_appCalc->getEyeRadiationTime());
+    QString str3 = getNumericString(m_appCalc->getEyeEnDensity());
+    QString str4 = getNumericString(m_appCalc->getEyeFocus());
+    QString str5 = getNumericString(m_appCalc->getFireBallRadius());
+    QString str6 = getNumericString(m_appCalc->getDistanceToReceiver());
+    QString str7 = getNumericString(m_appCalc->getFireBallEyeSize());
+    QString str8 = getNumericString(m_appCalc->
+                                            getSmokeKinematicViscosity(),"pow");
+    QString str9 = getNumericString(m_appCalc->getNormalFlameSpeed());
+    QString str10 = getNumericString(m_appCalc->getRe());
+    QString str11 = getNumericString(m_appCalc->getTurboFlameSpeed(), "verb");
+    QString str12 = getNumericString(m_appCalc->getAvgFlameSpeed(), "verb");
+    QString str13 = getNumericString(m_appCalc->getFireTime());
+
+    res = res.arg(str1).arg(str2).arg(str3).arg(str4).arg(str5).arg(str6).
+              arg(str7).arg(str8).arg(str9).arg(str10).arg(str11).arg(str12).
+              arg(str13);
+
+    return res;
+}
+
 QString LatexTextBuilder::getNumericString(double nVal, QString fmt){
     // fmt: "pow", "verb"
     QString res;
