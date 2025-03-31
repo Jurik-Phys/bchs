@@ -133,8 +133,6 @@ void QAppWindow::setTexFrame(){
     m_texScrollArea = new QScrollArea(m_scrollContainer);
     m_texScrollArea->setWidgetResizable(true);
     m_texScrollArea->setWidget(m_texFrame);
-    m_texScrollArea->resize(m_appWindowWidth/2  - 20,
-                            m_scrollContainer->frameRect().height());
 
     connect(this, &QAppWindow::scrollContainerResized,
             this, &QAppWindow::onScrollResized);
@@ -158,10 +156,10 @@ void QAppWindow::setHeaderFrame(){
     m_headFrame->setFrameShape(QFrame::StyledPanel);
     m_headFrame->setFrameShadow(QFrame::Raised);
     m_headFrame->setFixedHeight(70);
-    m_headFrame->setFixedWidth(m_appWindowWidth/2  - 10);
+    m_headFrame->setFixedWidth(m_appWindowWidth/2.33);
 
     // Left header block
-    QLabel *labTitle = new QLabel("Лабораторная работа\nТехногенный пожар");
+    QLabel *labTitle = new QLabel("Лабораторная работа\n\"Техногенный пожар\"");
     labTitle->setAlignment(Qt::AlignCenter);
 
     QFont font = labTitle->font();
@@ -171,7 +169,7 @@ void QAppWindow::setHeaderFrame(){
 
     // Center of header block
     QComboBox *inputDataType = new QComboBox();
-    inputDataType->addItem("Ручной ввод исходных данных");
+    inputDataType->addItem("Ручной ввод данных");
 
     // Right of header block
     QPushButton* clkBtn = new QPushButton();
@@ -187,7 +185,7 @@ void QAppWindow::setInputDataFrame(){
     m_inputFrame = new QFrame;
     m_inputFrame->setFrameShape(QFrame::StyledPanel);
     m_inputFrame->setFrameShadow(QFrame::Raised);
-    m_inputFrame->setFixedWidth(m_appWindowWidth/2  - 10);
+    m_inputFrame->setFixedWidth(m_appWindowWidth/2.33);
 
     table = new QTableWidget(9, 2, m_inputFrame);
 
@@ -208,7 +206,7 @@ void QAppWindow::setInputDataFrame(){
     m_inputFrame->setFixedHeight(tableTotalHeight + 27);
 
     QStringList tableHeaders;
-    tableHeaders << "Название величины" << "Значение величины";
+    tableHeaders << "Название величины" << "Значение";
     table->setHorizontalHeaderLabels(tableHeaders);
 
     valueNameList <<
@@ -247,7 +245,7 @@ void QAppWindow::setSummaryFrame(){
     m_sumFrame = new QFrame;
     m_sumFrame->setFrameShape(QFrame::StyledPanel);
     m_sumFrame->setFrameShadow(QFrame::Raised);
-    m_sumFrame->setFixedWidth(m_appWindowWidth/2  - 10);
+    m_sumFrame->setFixedWidth(m_appWindowWidth/2.33);
 }
 
 void QAppWindow::setAppLayout(){
@@ -283,7 +281,7 @@ void QAppWindow::addToTexFrame(QString text){
     texFrame->setFrameShape(QFrame::NoFrame);
     texFrame->setFrameShadow(QFrame::Plain);
     texFrame->setFixedHeight(texWidget->getRenderHeight());
-    texFrame->setFixedWidth(m_appWindowWidth/2  - 40);
+    texFrame->setFixedWidth(m_appWindowWidth/1.86);
     QVBoxLayout* vTexFrame = new QVBoxLayout(texFrame);
     vTexFrame->setContentsMargins(0, 0, 0, 0);
     vTexFrame->addWidget(texWidget);

@@ -50,7 +50,7 @@ class QAppWindow : public QWidget {
         void onScrollResized(int, int);
 
     private:
-        const int    m_appWindowWidth = 1600;
+        const int    m_appWindowWidth = 1390;
         const int    m_appWindowHeight = 750;
         const int    m_texTextSize = 18;
         QFrame*      m_headFrame;
