@@ -60,6 +60,17 @@ class QAppWindow : public QWidget {
         QVBoxLayout* m_appVLayout;
         QScrollArea* m_texScrollArea;
         QFrame*      m_scrollContainer;
+        QVBoxLayout* m_sumFrameVLayout;
+        QLabel*      m_fireTime;
+        QString      m_fireTimeText;
+        QLabel*      m_qDensity;
+        QString      m_qDensityText;
+        QLabel*      m_eyeRadiationTime;
+        QString      m_eyeRadiationTimeText;
+        QLabel*      m_fireBallEyeSize;
+        QString      m_fireBallEyeSizeText;
+        QLabel*      m_eyeEnDensity;
+        QString      m_eyeEnDensityText;
 
         void setHeaderFrame();
         void setInputDataFrame();
@@ -68,7 +79,7 @@ class QAppWindow : public QWidget {
         void setAppLayout();
 
         void addToTexFrame(QString);
-
+        void updResultFrame(GasExplosionCalc*);
 };
 
 #endif

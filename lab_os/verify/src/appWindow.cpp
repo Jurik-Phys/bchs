@@ -106,6 +106,8 @@ void QAppWindow::gasExplosionCalculation(){
     addToTexFrame(m_latexTextBuilder->getTextStage07());
     addToTexFrame(m_latexTextBuilder->getTextStage08());
     addToTexFrame(m_latexTextBuilder->getTextStage09());
+
+    updResultFrame(m_gasExplosionCalc);
 }
 
 void QAppWindow::setTexFrame(){
@@ -162,7 +164,7 @@ void QAppWindow::setHeaderFrame(){
     QLabel *labTitle = new QLabel("Лабораторная работа\n\"Техногенный пожар\"");
     labTitle->setAlignment(Qt::AlignCenter);
 
-    QFont font = labTitle->font();
+    QFont font;
     font.setPointSize(14);
     font.setBold(true);
     labTitle->setFont(font);
@@ -242,10 +244,66 @@ void QAppWindow::setInputDataFrame(){
 }
 
 void QAppWindow::setSummaryFrame(){
+    QString noResult("n/a");
+
     m_sumFrame = new QFrame;
     m_sumFrame->setFrameShape(QFrame::StyledPanel);
     m_sumFrame->setFrameShadow(QFrame::Raised);
     m_sumFrame->setFixedWidth(m_appWindowWidth/2.33);
+
+    // Summary data output initialize
+    m_sumFrameVLayout   = new QVBoxLayout(m_sumFrame);
+
+    // Set result output title
+    QLabel* outTitle = new QLabel();
+    outTitle->setText("Результаты расчёта");
+    outTitle->setAlignment(Qt::AlignCenter);
+
+    QFont font;
+    font.setPointSize(12);
+    font.setBold(true);
+    outTitle->setFont(font);
+
+    // 1. fireTime
+    m_fireTime          = new QLabel();
+    m_fireTimeText = QString("- время выгорания газа в огневом шаре, "
+                                                          "<i>t</i> = %1 c;" );
+
+    // 2. qDensity
+    m_qDensity          = new QLabel();
+    m_qDensityText = QString("- плотность потока энергии у приёмника "
+                   "инфракрасного излучения, <i>q</i> = %1 Вт/м<sup>2</sup>;");
+
+    // 3. eyeRadiationTime
+    m_eyeRadiationTime  = new QLabel();
+    m_eyeRadiationTimeText = QString("- время действия излучения на сетчатку "
+                              "глаза человека <i>t</i><sub>имп</sub> = %1 c;");
+
+    // 4. fireBallEyeSize
+    m_fireBallEyeSize   = new QLabel();
+    m_fireBallEyeSizeText = QString("- диаметр отображения огневого шара на "
+                                            "сетчатке глаза, <i>d</i> = %1 мм");
+
+    // 5. eyeEnDensity
+    m_eyeEnDensity      = new QLabel();
+    m_eyeEnDensityText = QString("- удельная энергия, поздействующая на "
+                "сетчатку глаза, <i>Q</i><sub>имп</sub> = %1 Дж/м<sup>2</sup>");
+
+    m_sumFrameVLayout->addWidget(outTitle);
+    m_sumFrameVLayout->addWidget(m_fireTime);
+    m_sumFrameVLayout->addWidget(m_qDensity);
+    m_sumFrameVLayout->addWidget(m_eyeRadiationTime);
+    m_sumFrameVLayout->addWidget(m_fireBallEyeSize);
+    m_sumFrameVLayout->addWidget(m_eyeEnDensity);
+
+    // Устанавливаем layout на frame
+    m_sumFrame->setLayout(m_sumFrameVLayout);
+
+    m_fireTime->setText(m_fireTimeText.arg(noResult));
+    m_qDensity->setText(m_qDensityText.arg(noResult));
+    m_eyeRadiationTime->setText(m_eyeRadiationTimeText.arg(noResult));
+    m_fireBallEyeSize->setText(m_fireBallEyeSizeText.arg(noResult));
+    m_eyeEnDensity->setText(m_eyeEnDensityText.arg(noResult));
 }
 
 void QAppWindow::setAppLayout(){
@@ -268,6 +326,24 @@ void QAppWindow::setAppLayout(){
     vRColumnLayout->addWidget(m_scrollContainer);
 
     setLayout(m_appVLayout);
+}
+
+void QAppWindow::updResultFrame(GasExplosionCalc* calc){
+    QString fireTimeVal = QString::number(calc->getFireTime());
+    m_fireTime->setText(m_fireTimeText.arg(fireTimeVal));
+
+    QString qDensityVal = QString::number(calc->getQDensity());
+    m_qDensity->setText(m_qDensityText.arg(qDensityVal));
+
+    QString eyeRadiationTime = QString::number(calc->getEyeRadiationTime());
+    m_eyeRadiationTime->setText(m_eyeRadiationTimeText.arg(eyeRadiationTime));
+
+    QString fireBallEyeSizeVal = QString::number(round(calc->
+                                                         getFireBallEyeSize()));
+    m_fireBallEyeSize->setText(m_fireBallEyeSizeText.arg(fireBallEyeSizeVal));
+
+    QString eyeEnDensityVal = QString::number(calc->getEyeEnDensity());
+    m_eyeEnDensity->setText(m_eyeEnDensityText.arg(eyeEnDensityVal));
 }
 
 void QAppWindow::addToTexFrame(QString text){
