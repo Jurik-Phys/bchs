@@ -57,6 +57,7 @@ class QAppWindow : public QWidget {
         QFrame*      m_inputFrame;
         QFrame*      m_texFrame;
         QFrame*      m_sumFrame;
+        QFrame*      m_btnFrame;
         QVBoxLayout* m_appVLayout;
         QScrollArea* m_texScrollArea;
         QFrame*      m_scrollContainer;
@@ -75,6 +76,7 @@ class QAppWindow : public QWidget {
         void setHeaderFrame();
         void setInputDataFrame();
         void setTexFrame();
+        void setBtnFrame();
         void setSummaryFrame();
         void setAppLayout();
 

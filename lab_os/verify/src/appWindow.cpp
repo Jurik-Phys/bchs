@@ -13,6 +13,7 @@ QAppWindow::QAppWindow(QWidget *parent) : QWidget(parent) {
     setInputDataFrame();
     setTexFrame();
     setSummaryFrame();
+    setBtnFrame();
     setAppLayout();
 
     // Calculator
@@ -306,6 +307,30 @@ void QAppWindow::setSummaryFrame(){
     m_eyeEnDensity->setText(m_eyeEnDensityText.arg(noResult));
 }
 
+void QAppWindow::setBtnFrame(){
+    m_btnFrame = new QFrame;
+    m_btnFrame->setFrameShape(QFrame::StyledPanel);
+    m_btnFrame->setFrameShadow(QFrame::Raised);
+    m_btnFrame->setFixedHeight(70);
+    m_btnFrame->setFixedWidth(m_appWindowWidth/2.33);
+
+    QHBoxLayout* btnFrameHLayout = new QHBoxLayout(m_btnFrame);
+
+    QPushButton* closeBtn = new QPushButton;
+    QPushButton* clearBtn = new QPushButton;
+    QPushButton* saveBtn  = new QPushButton;
+
+    closeBtn->setText("Выход");
+    saveBtn->setText("Сохранить");
+    clearBtn->setText("Сброс");
+
+    btnFrameHLayout->addWidget(closeBtn);
+    btnFrameHLayout->addWidget(saveBtn);
+    btnFrameHLayout->addWidget(clearBtn);
+
+    m_btnFrame->setLayout(btnFrameHLayout);
+}
+
 void QAppWindow::setAppLayout(){
     // Window layout
     // AAAAA CCCCC
@@ -323,6 +348,7 @@ void QAppWindow::setAppLayout(){
     vLColumnLayout->addWidget(m_headFrame);
     vLColumnLayout->addWidget(m_inputFrame);
     vLColumnLayout->addWidget(m_sumFrame);
+    vLColumnLayout->addWidget(m_btnFrame);
     vRColumnLayout->addWidget(m_scrollContainer);
 
     setLayout(m_appVLayout);
