@@ -98,6 +98,8 @@ void QAppWindow::gasExplosionCalculation(){
     getInputData();
     m_gasExplosionCalc->getResult();
 
+    clearTexForm();
+
     addToTexFrame(m_latexTextBuilder->getTextStage01());
     addToTexFrame(m_latexTextBuilder->getTextStage02());
     addToTexFrame(m_latexTextBuilder->getTextStage03());
