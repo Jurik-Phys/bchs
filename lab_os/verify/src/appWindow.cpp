@@ -146,6 +146,40 @@ void QAppWindow::onScrollResized(int width, int height){
     m_texScrollArea->setFixedWidth(width);
 }
 
+void QAppWindow::appExit(){
+    QMessageBox::StandardButton reply = QMessageBox::question(
+            this, "Подтверждение выхода", "Вы действительно хотите выйти?",
+            QMessageBox::Yes | QMessageBox::No);
+
+    if (reply == QMessageBox::Yes) {
+        QApplication::quit();
+    }
+}
+
+void QAppWindow::clearTexForm(){
+    qDebug() << "\n[II] Clear tex \"frames\" from output";
+
+    // One is a spacer in m_texLayout;
+    int framesCount = m_texLayout->count() - 1;
+    qDebug() << "[II] Separate tex frames count:"<< framesCount;
+    for (int i = framesCount; i >= 0; --i) {
+        QLayoutItem* item = m_texLayout->itemAt(i);
+        if (item) {
+            QWidget* widget = item->widget();
+            if (widget){
+                m_texLayout->removeWidget(widget);
+                widget->deleteLater();
+            }
+            else {
+                qDebug() << "[II] Probably a layout or stretch with index" << i;
+            }
+        }
+    }
+    qDebug() << "[II] Clear tex \"frames\" done";
+
+    rstResultFrame();
+}
+
 void QAppWindow::resizeEvent(QResizeEvent *event) {
         QWidget::resizeEvent(event);
         emit scrollContainerResized(m_scrollContainer->frameRect().width(),
@@ -245,7 +279,7 @@ void QAppWindow::setInputDataFrame(){
 }
 
 void QAppWindow::setSummaryFrame(){
-    QString noResult("n/a");
+    QString noResult("...");
 
     m_sumFrame = new QFrame;
     m_sumFrame->setFrameShape(QFrame::StyledPanel);
@@ -329,6 +363,11 @@ void QAppWindow::setBtnFrame(){
     btnFrameHLayout->addWidget(clearBtn);
 
     m_btnFrame->setLayout(btnFrameHLayout);
+
+    QObject::connect(closeBtn, &QPushButton::clicked,
+                                                    this, &QAppWindow::appExit);
+    QObject::connect(clearBtn, &QPushButton::clicked,
+                                               this, &QAppWindow::clearTexForm);
 }
 
 void QAppWindow::setAppLayout(){
@@ -372,17 +411,25 @@ void QAppWindow::updResultFrame(GasExplosionCalc* calc){
     m_eyeEnDensity->setText(m_eyeEnDensityText.arg(eyeEnDensityVal));
 }
 
+void QAppWindow::rstResultFrame(){
+    QString noResult("...");
+    m_fireTime->setText(m_fireTimeText.arg(noResult));
+    m_qDensity->setText(m_qDensityText.arg(noResult));
+    m_eyeRadiationTime->setText(m_eyeRadiationTimeText.arg(noResult));
+    m_fireBallEyeSize->setText(m_fireBallEyeSizeText.arg(noResult));
+    m_eyeEnDensity->setText(m_eyeEnDensityText.arg(noResult));
+}
+
 void QAppWindow::addToTexFrame(QString text){
 
     TeXWidget* texWidget = new TeXWidget(nullptr, m_texTextSize);
     texWidget->setLaTeX(text.toStdString());
 
-    // Workaround for a potential bug where no TexWidget is painted
-    // with a spacer in the layout
+    // Each added texWidget is located in a separate QFrame
     QFrame* texFrame = new QFrame;
     texFrame->setFrameShape(QFrame::NoFrame);
     texFrame->setFrameShadow(QFrame::Plain);
-    texFrame->setFixedHeight(texWidget->getRenderHeight());
+    texFrame->setFixedHeight(texWidget->getRenderHeight() - 18.0);
     texFrame->setFixedWidth(m_appWindowWidth/1.86);
     QVBoxLayout* vTexFrame = new QVBoxLayout(texFrame);
     vTexFrame->setContentsMargins(0, 0, 0, 0);

@@ -48,6 +48,8 @@ class QAppWindow : public QWidget {
 
     private slots:
         void onScrollResized(int, int);
+        void appExit();
+        void clearTexForm();
 
     private:
         const int    m_appWindowWidth = 1390;
@@ -82,6 +84,7 @@ class QAppWindow : public QWidget {
 
         void addToTexFrame(QString);
         void updResultFrame(GasExplosionCalc*);
+        void rstResultFrame();
 };
 
 #endif
