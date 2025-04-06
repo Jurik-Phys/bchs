@@ -11,6 +11,7 @@ void initQtTeX() {
 int main(int argc, char** argv){
 
     QApplication app(argc, argv);
+    QIcon appIcon(":res/icon.png");
 
     // Use this fonts file for draw formula
     // copy file from "ext/MicroTeX/res/firamath"
@@ -23,6 +24,7 @@ int main(int argc, char** argv){
     initQtTeX();
 
     QAppWindow appWindow;
+    appWindow.setWindowIcon(appIcon);
     appWindow.show();
     int retn = app.exec();
 

@@ -33,7 +33,7 @@ class QAppWindow : public QWidget {
 
     protected:
         TeXWidget*    texwidget;
-        QTableWidget* table;
+        QTableWidget* m_table;
         QStringList   valueNameList;
         QStringList   valuesList;
 
@@ -51,6 +51,7 @@ class QAppWindow : public QWidget {
         void onScrollResized(int, int);
         void appExit();
         void clearTexForm();
+        void dataVariantSelected(int);
 
     private:
         const int    m_appWindowWidth = 1390;
@@ -87,6 +88,18 @@ class QAppWindow : public QWidget {
         void updResultFrame(GasExplosionCalc*);
         void rstResultFrame();
         void saveTexForm();
+
+        struct InputData {
+            double carbonAtomCount;
+            double hydrogenAtomCount;
+            double gasHeatOfCombustion;
+            double upperFlammabilityLimit;
+            double gasDensity;
+            double normalFlameSpeed;
+            double gasMass;
+            double distanceToReceiver;
+            double eyeRadiationTime;
+        };
 };
 
 #endif

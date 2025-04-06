@@ -41,8 +41,8 @@ void QAppWindow::showErrorMessge(QString errorMessage){
 
 void QAppWindow::getInputData(){
     qDebug() << "[II] Get input data from table";
-    for (int row = 0; row < table->rowCount(); ++row) {
-        QTableWidgetItem* item = table->item(row, 1);
+    for (int row = 0; row < m_table->rowCount(); ++row) {
+        QTableWidgetItem* item = m_table->item(row, 1);
 
         if (item) {
             bool ok = false;
@@ -182,6 +182,52 @@ void QAppWindow::clearTexForm(){
     rstResultFrame();
 }
 
+void QAppWindow::dataVariantSelected(int index){
+
+    QVector<InputData> inDataVariants = {
+        {3.0, 8.0,  93.6, 9.5, 1.90, 0.40, 50.0, 200.0, 0.10},
+        {3.0, 8.0,  94.0, 9.5, 1.90, 0.50, 20.0, 210.0, 0.10},
+        {3.1, 8.2,  96.0, 9.2, 1.95, 0.49, 30.0, 220.0, 0.11},
+        {3.2, 8.4,  98.0, 8.9, 2.00, 0.48, 40.0, 230.0, 0.12},
+        {3.3, 8.6, 100.0, 8.6, 2.05, 0.47, 50.0, 240.0, 0.10},
+        {3.4, 8.8, 102.0, 8.3, 2.10, 0.46, 20.0, 250.0, 0.11},
+        {3.5, 9.0, 104.0, 8.0, 2.15, 0.45, 30.0, 260.0, 0.12},
+        {3.6, 9.2, 108.0, 7.7, 2.20, 0.44, 40.0, 270.0, 0.10},
+        {3.7, 9.4, 110.0, 7.4, 3.25, 0.43, 50.0, 280.0, 0.11},
+        {3.8, 9.6, 112.0, 7.1, 3.30, 0.42, 20.0, 290.0, 0.12},
+        {3.9, 9.8, 114.0, 6.8, 3.35, 0.41, 30.0, 300.0, 0.10}
+    };
+
+    InputData data = inDataVariants[index];
+
+    m_table->setItem(0, 1,
+                   new QTableWidgetItem(QString::number(data.carbonAtomCount)));
+    m_table->setItem(1, 1,
+                 new QTableWidgetItem(QString::number(data.hydrogenAtomCount)));
+    m_table->setItem(2, 1,
+               new QTableWidgetItem(QString::number(data.gasHeatOfCombustion)));
+    m_table->setItem(3, 1,
+            new QTableWidgetItem(QString::number(data.upperFlammabilityLimit)));
+    m_table->setItem(4, 1,
+                   new QTableWidgetItem(QString::number(data.gasDensity)));
+    m_table->setItem(5, 1,
+                  new QTableWidgetItem(QString::number(data.normalFlameSpeed)));
+    m_table->setItem(6, 1,
+                   new QTableWidgetItem(QString::number(data.gasMass)));
+    m_table->setItem(7, 1,
+                new QTableWidgetItem(QString::number(data.distanceToReceiver)));
+    m_table->setItem(8, 1,
+                  new QTableWidgetItem(QString::number(data.eyeRadiationTime)));
+
+    // Edit only for manual input data
+    if (index != 0){
+        m_table->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    }
+    else {
+        m_table->setEditTriggers(QAbstractItemView::AllEditTriggers);
+    }
+}
+
 void QAppWindow::resizeEvent(QResizeEvent *event) {
         QWidget::resizeEvent(event);
         emit scrollContainerResized(m_scrollContainer->frameRect().width(),
@@ -209,11 +255,24 @@ void QAppWindow::setHeaderFrame(){
     // Center of header block
     QComboBox *inputDataType = new QComboBox();
     inputDataType->addItem("Ручной ввод данных");
+    inputDataType->addItem("Вариант расчёта №1");
+    inputDataType->addItem("Вариант расчёта №2");
+    inputDataType->addItem("Вариант расчёта №3");
+    inputDataType->addItem("Вариант расчёта №4");
+    inputDataType->addItem("Вариант расчёта №5");
+    inputDataType->addItem("Вариант расчёта №6");
+    inputDataType->addItem("Вариант расчёта №7");
+    inputDataType->addItem("Вариант расчёта №8");
+    inputDataType->addItem("Вариант расчёта №9");
+    inputDataType->addItem("Вариант расчёта №10");
+    QObject::connect(inputDataType, &QComboBox::activated,
+                                        this, &QAppWindow::dataVariantSelected);
 
     // Right of header block
     QPushButton* clkBtn = new QPushButton();
     clkBtn->setText("Запустить расчёт");
-    QObject::connect(clkBtn, &QPushButton::clicked, this, &QAppWindow::gasExplosionCalculation);
+    QObject::connect(clkBtn, &QPushButton::clicked, this,
+                                          &QAppWindow::gasExplosionCalculation);
 
     hHeadFrameLayout->addWidget(labTitle);
     hHeadFrameLayout->addWidget(inputDataType);
@@ -226,58 +285,50 @@ void QAppWindow::setInputDataFrame(){
     m_inputFrame->setFrameShadow(QFrame::Raised);
     m_inputFrame->setFixedWidth(m_appWindowWidth/2.33);
 
-    table = new QTableWidget(9, 2, m_inputFrame);
+    m_table = new QTableWidget(9, 2, m_inputFrame);
 
     QHBoxLayout* hInputFrameLayout = new QHBoxLayout(m_inputFrame);
-    hInputFrameLayout->addWidget(table);
+    hInputFrameLayout->addWidget(m_table);
 
     // Horizontal
-    table->horizontalHeader()->setStretchLastSection(true);
-    table->horizontalHeader()
+    m_table->horizontalHeader()->setStretchLastSection(true);
+    m_table->horizontalHeader()
            ->setSectionResizeMode(QHeaderView::ResizeToContents);
 
     // Vertical
-    int tableTotalHeight = table->horizontalHeader()->height();
-    for (int row = 0; row < table->rowCount(); ++row) {
-        tableTotalHeight += table->rowHeight(row);
+    int tableTotalHeight = m_table->horizontalHeader()->height();
+    for (int row = 0; row < m_table->rowCount(); ++row) {
+        tableTotalHeight += m_table->rowHeight(row);
     }
-    table->setFixedHeight(tableTotalHeight + 2);
+    m_table->setFixedHeight(tableTotalHeight + 2);
     m_inputFrame->setFixedHeight(tableTotalHeight + 27);
 
     QStringList tableHeaders;
     tableHeaders << "Название величины" << "Значение";
-    table->setHorizontalHeaderLabels(tableHeaders);
+    m_table->setHorizontalHeaderLabels(tableHeaders);
 
-    valueNameList <<
-        "Число атомов углерода в углеводородном газе (x), ед." <<
-        "Число атомов водорода в углеводородном газе (y), ед." <<
-        "Теплота сгорания углеводородного газа (Q), МДж/м<sup>3</sup>" <<
+    QStringList valueNameList = {
+        "Число атомов углерода в углеводородном газе (x), ед.",
+        "Число атомов водорода в углеводородном газе (y), ед.",
+        "Теплота сгорания углеводородного газа (Q), МДж/м<sup>3</sup>",
         "Верхний концентрационный предел воспламенения "
-                                    "углеводородного газа (e<sub>в</sub>), %" <<
+                                    "углеводородного газа (e<sub>в</sub>), %",
         "Плотность углеводородного газа при нормальных условиях "
-                                          "(ρ<sub>0</sub>), кг/м<sup>3</sup>" <<
-        "Нормальная скорость распространения пламени (V<sub>н</sub>), м/c" <<
-        "Масса углеводородного газа, образовавшего огневой шар (G), т" <<
+                                          "(ρ<sub>0</sub>), кг/м<sup>3</sup>",
+        "Нормальная скорость распространения пламени (V<sub>н</sub>), м/c",
+        "Масса углеводородного газа, образовавшего огневой шар (G), т",
         "Расстояние от зоны горения до приёмника инфракрасного излучения "
-                                                                     "(h), м" <<
+                                                                     "(h), м",
         "Время действия излучения на сетчатку глаза человека "
-                                                         "(t<sub>имп</sub>), с";
+                                                       "(t<sub>имп</sub>), с" };
 
-    valuesList << "3"     <<
-                  "8"     <<
-                  "93.6"  <<
-                  "9.5"   <<
-                  "1.9"   <<
-                  "0.4"   <<
-                  "50.0"  <<
-                  "200.0" <<
-                  "0.1";
-
-    for (int row = 0; row < table->rowCount(); ++row) {
+    for (int row = 0; row < m_table->rowCount(); ++row) {
         QLabel *label = new QLabel(valueNameList[row]);
-        table->setCellWidget(row,0, label);
-        table->setItem(row, 1, new QTableWidgetItem(valuesList[row]));
+        m_table->setCellWidget(row,0, label);
     }
+
+    // Initial data values (manual input with r/w)
+    dataVariantSelected(0);
 }
 
 void QAppWindow::setSummaryFrame(){

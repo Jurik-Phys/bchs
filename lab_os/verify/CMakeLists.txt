@@ -20,11 +20,13 @@ include_directories(${CMAKE_SOURCE_DIR}/src              \\
                     ${CMAKE_SOURCE_DIR}/ext/MicroTeX/lib \\
                     ${CMAKE_BINARY_DIR}/ext/MicroTeX/lib)
 
+qt_add_resources(RESOURCES resources.qrc)
+
 set(SOURCE_EXE main.cpp)
 
 add_subdirectory(src)
 add_subdirectory(ext/MicroTeX)
 
-add_executable(lab_os_verify ${SOURCE_EXE})
+add_executable(lab_os_verify ${SOURCE_EXE} ${RESOURCES})
 
 target_link_libraries(lab_os_verify PRIVATE src-lib Qt6::Widgets microtex microtex-qt)
