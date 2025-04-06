@@ -11,6 +11,7 @@
 #include <QScrollArea>
 #include <QPushButton>
 #include <QMessageBox>
+#include <QFileDialog>
 #include <QHeaderView>
 #include <QStringList>
 #include <QLabel>
@@ -85,6 +86,7 @@ class QAppWindow : public QWidget {
         void addToTexFrame(QString);
         void updResultFrame(GasExplosionCalc*);
         void rstResultFrame();
+        void saveTexForm();
 };
 
 #endif

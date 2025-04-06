@@ -6,7 +6,7 @@
 QAppWindow::QAppWindow(QWidget *parent) : QWidget(parent) {
 
     this->resize(m_appWindowWidth, m_appWindowHeight);
-    this->setWindowTitle("Лаб. работа \"Техногенный взрыв\". "
+    this->setWindowTitle("Лаб. работа «Техногенный пожар». "
                          "Проверочный расчёт");
 
     setHeaderFrame();
@@ -198,7 +198,7 @@ void QAppWindow::setHeaderFrame(){
     m_headFrame->setFixedWidth(m_appWindowWidth/2.33);
 
     // Left header block
-    QLabel *labTitle = new QLabel("Лабораторная работа\n\"Техногенный пожар\"");
+    QLabel *labTitle = new QLabel("Лабораторная работа\n«Техногенный пожар»");
     labTitle->setAlignment(Qt::AlignCenter);
 
     QFont font;
@@ -360,9 +360,9 @@ void QAppWindow::setBtnFrame(){
     saveBtn->setText("Сохранить");
     clearBtn->setText("Сброс");
 
-    btnFrameHLayout->addWidget(closeBtn);
     btnFrameHLayout->addWidget(saveBtn);
     btnFrameHLayout->addWidget(clearBtn);
+    btnFrameHLayout->addWidget(closeBtn);
 
     m_btnFrame->setLayout(btnFrameHLayout);
 
@@ -370,6 +370,9 @@ void QAppWindow::setBtnFrame(){
                                                     this, &QAppWindow::appExit);
     QObject::connect(clearBtn, &QPushButton::clicked,
                                                this, &QAppWindow::clearTexForm);
+    QObject::connect(saveBtn, &QPushButton::clicked,
+                                                this, &QAppWindow::saveTexForm);
+
 }
 
 void QAppWindow::setAppLayout(){
@@ -420,6 +423,26 @@ void QAppWindow::rstResultFrame(){
     m_eyeRadiationTime->setText(m_eyeRadiationTimeText.arg(noResult));
     m_fireBallEyeSize->setText(m_fireBallEyeSizeText.arg(noResult));
     m_eyeEnDensity->setText(m_eyeEnDensityText.arg(noResult));
+}
+
+void QAppWindow::saveTexForm(){
+    qDebug() << "[II] save LaTeX output";
+
+    QString fileName = QFileDialog::getSaveFileName(this,
+                             "Сохранить изображение", "", "PNG Images (*.png)");
+
+    if (!fileName.isEmpty()){
+        if (!fileName.endsWith(".png", Qt::CaseInsensitive)){
+            fileName += ".png";
+        }
+
+        QPixmap pixmap(m_texFrame->size());
+        m_texFrame->render(&pixmap);
+
+        if (!pixmap.save(fileName)) {
+            qDebug() << "[WW] Не удалось сохранить изображение";
+        }
+    }
 }
 
 void QAppWindow::addToTexFrame(QString text){
