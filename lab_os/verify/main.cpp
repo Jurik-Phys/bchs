@@ -2,6 +2,10 @@
 #include "microtex.h"
 
 void initQtTeX() {
+    // "openmath" rendering quality worse than "master" branch (for Windows)
+    // https://github.com/NanoMichael/MicroTeX/issues/159
+    microtex::MicroTeX::setRenderGlyphUsePath(true);
+
     microtex::PlatformFactory::registerFactory("qt",
         std::make_unique<microtex::PlatformFactory_qt>()
     );

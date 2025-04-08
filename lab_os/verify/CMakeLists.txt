@@ -9,7 +9,9 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 
+# MicroTeX setup
 option(HAVE_LOG "Enable or disable MicroTeX logs" OFF)
+set(BUILD_STATIC "If build for static library" ON)
 set(BUILD_EXAMPLE_QT OFF)
 set(QT ON)
 
