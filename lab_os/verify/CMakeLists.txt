@@ -15,6 +15,12 @@ set(BUILD_STATIC "If build for static library" ON)
 set(BUILD_EXAMPLE_QT OFF)
 set(QT ON)
 
+# Copy FiraMath font to build directory
+set(SOURCE_FONTS_DIR ${CMAKE_SOURCE_DIR}/ext/MicroTeX/res/firamath)
+set(BUILD_DIR ${CMAKE_BINARY_DIR})
+file(COPY ${SOURCE_FONTS_DIR}/FiraMath-Regular.clm2
+              ${SOURCE_FONTS_DIR}/FiraMath-Regular.otf DESTINATION ${BUILD_DIR})
+
 find_package(Qt6 REQUIRED COMPONENTS Widgets)
 
 include_directories(${CMAKE_SOURCE_DIR}/src              \\
