@@ -450,7 +450,7 @@ void QAppWindow::setAppLayout(){
 }
 
 void QAppWindow::updResultFrame(GasExplosionCalc* calc){
-    QString fireTimeVal = QString::number(calc->getFireTime());
+    QString fireTimeVal = QString::number(calc->getFireTime(), 'f', 1);
     m_fireTime->setText(m_fireTimeText.arg(fireTimeVal));
 
     QString qDensityVal = QString::number(calc->getQDensity());
@@ -463,7 +463,7 @@ void QAppWindow::updResultFrame(GasExplosionCalc* calc){
                                                          getFireBallEyeSize()));
     m_fireBallEyeSize->setText(m_fireBallEyeSizeText.arg(fireBallEyeSizeVal));
 
-    QString eyeEnDensityVal = QString::number(calc->getEyeEnDensity());
+    QString eyeEnDensityVal = QString::number(calc->getEyeEnDensity(), 'f', 1);
     m_eyeEnDensity->setText(m_eyeEnDensityText.arg(eyeEnDensityVal));
 }
 

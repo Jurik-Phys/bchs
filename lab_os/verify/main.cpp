@@ -20,8 +20,8 @@ void initQtTeX() {
 int main(int argc, char** argv){
 
     #ifdef Q_OS_WIN
-	// Console output. Work with MSYS2 terminal
-	AttachConsole(ATTACH_PARENT_PROCESS);
+	    // Console output. Work with MSYS2 terminal
+	    AttachConsole(ATTACH_PARENT_PROCESS);
     #endif
 
     QApplication app(argc, argv);
