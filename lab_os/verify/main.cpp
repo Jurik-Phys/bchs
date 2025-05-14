@@ -25,6 +25,7 @@ int main(int argc, char** argv){
     #endif
 
     QApplication app(argc, argv);
+    QApplication::setStyle("Fusion");
     QIcon appIcon(":/icon.png");
 
     // Use this fonts file for draw formula
