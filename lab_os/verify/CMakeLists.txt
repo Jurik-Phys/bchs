@@ -6,8 +6,8 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(CMAKE_AUTOMOC ON)
-set(CMAKE_AUTORCC ON)
-set(CMAKE_AUTOUIC ON)
+set(CMAKE_AUTORCC OFF)
+set(CMAKE_AUTOUIC OFF)
 
 # MicroTeX setup
 option(HAVE_LOG "Enable or disable MicroTeX logs" OFF)
@@ -28,13 +28,17 @@ include_directories(${CMAKE_SOURCE_DIR}/src              \\
                     ${CMAKE_SOURCE_DIR}/ext/MicroTeX/lib \\
                     ${CMAKE_BINARY_DIR}/ext/MicroTeX/lib)
 
-qt_add_resources(RESOURCES resources.qrc)
+qt_add_resources(RESOURCES "${CMAKE_SOURCE_DIR}/res/resources.qrc")
+
+if(WIN32)
+    set(APP_ICON_RESOURCE_WINDOWS "${CMAKE_SOURCE_DIR}/res/icon.rc")
+endif()
 
 set(SOURCE_EXE main.cpp)
 
 add_subdirectory(src)
 add_subdirectory(ext/MicroTeX)
 
-add_executable(lab_os_verify ${SOURCE_EXE} ${RESOURCES})
+add_executable(lab_os_verify ${SOURCE_EXE} ${RESOURCES} ${APP_ICON_RESOURCE_WINDOWS})
 
 target_link_libraries(lab_os_verify PRIVATE src-lib Qt6::Widgets microtex microtex-qt)
