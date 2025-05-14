@@ -1,5 +1,10 @@
 #include "appWindow.h"
 #include "microtex.h"
+#include <iostream>
+
+#ifdef Q_OS_WIN
+    #include <windows.h>
+#endif
 
 void initQtTeX() {
     // "openmath" rendering quality worse than "master" branch (for Windows)
@@ -13,6 +18,11 @@ void initQtTeX() {
 }
 
 int main(int argc, char** argv){
+
+    #ifdef Q_OS_WIN
+	// Console output. Work with MSYS2 terminal
+	AttachConsole(ATTACH_PARENT_PROCESS);
+    #endif
 
     QApplication app(argc, argv);
     QIcon appIcon(":/icon.png");

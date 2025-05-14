@@ -32,6 +32,7 @@ qt_add_resources(RESOURCES "${CMAKE_SOURCE_DIR}/res/resources.qrc")
 
 if(WIN32)
     set(APP_ICON_RESOURCE_WINDOWS "${CMAKE_SOURCE_DIR}/res/icon.rc")
+    set(WIN_FLAG "WIN32")
 endif()
 
 set(SOURCE_EXE main.cpp)
@@ -39,6 +40,6 @@ set(SOURCE_EXE main.cpp)
 add_subdirectory(src)
 add_subdirectory(ext/MicroTeX)
 
-add_executable(lab_os_verify ${SOURCE_EXE} ${RESOURCES} ${APP_ICON_RESOURCE_WINDOWS})
+add_executable(lab_os_verify ${WIN_FLAG} ${SOURCE_EXE} ${RESOURCES} ${APP_ICON_RESOURCE_WINDOWS})
 
 target_link_libraries(lab_os_verify PRIVATE src-lib Qt6::Widgets microtex microtex-qt)
