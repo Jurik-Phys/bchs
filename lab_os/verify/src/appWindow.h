@@ -19,6 +19,7 @@
 #include "qt_texwidget.h"
 #include "gasExplosionCalc.h"
 #include "latexTextBuilder.h"
+#include "customTableDelegate.h"
 
 class QAppWindow : public QWidget {
 

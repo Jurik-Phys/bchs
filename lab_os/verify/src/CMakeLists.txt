@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.20)
 set(SOURCE_LIB appWindow.cpp \\
                qt_texwidget.cpp \\
                gasExplosionCalc.cpp \\
+               customTableDelegate.cpp \\
                latexTextBuilder.cpp )
 
 add_library(src-lib STATIC ${SOURCE_LIB})

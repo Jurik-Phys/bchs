@@ -287,6 +287,10 @@ void QAppWindow::setInputDataFrame(){
 
     m_table = new QTableWidget(9, 2, m_inputFrame);
 
+    // Set custom delegate to table
+    CustomTableDelegate* delegate = new CustomTableDelegate(m_table);
+    m_table->setItemDelegate(delegate);
+
     QHBoxLayout* hInputFrameLayout = new QHBoxLayout(m_inputFrame);
     hInputFrameLayout->addWidget(m_table);
 
@@ -332,7 +336,7 @@ void QAppWindow::setInputDataFrame(){
 }
 
 void QAppWindow::setSummaryFrame(){
-    QString noResult("...");
+    QString noResult("…");
 
     m_sumFrame = new QFrame;
     m_sumFrame->setFrameShape(QFrame::StyledPanel);
@@ -451,24 +455,27 @@ void QAppWindow::setAppLayout(){
 
 void QAppWindow::updResultFrame(GasExplosionCalc* calc){
     QString fireTimeVal = QString::number(calc->getFireTime(), 'f', 1);
-    m_fireTime->setText(m_fireTimeText.arg(fireTimeVal));
+    m_fireTime->setText(m_fireTimeText.arg(fireTimeVal).replace(".", ","));
 
     QString qDensityVal = QString::number(calc->getQDensity());
-    m_qDensity->setText(m_qDensityText.arg(qDensityVal));
+    m_qDensity->setText(m_qDensityText.arg(qDensityVal).replace(".", ","));
 
     QString eyeRadiationTime = QString::number(calc->getEyeRadiationTime());
-    m_eyeRadiationTime->setText(m_eyeRadiationTimeText.arg(eyeRadiationTime));
+    m_eyeRadiationTime->setText(m_eyeRadiationTimeText
+                                    .arg(eyeRadiationTime).replace(".", ","));
 
     QString fireBallEyeSizeVal = QString::number(round(calc->
                                                          getFireBallEyeSize()));
-    m_fireBallEyeSize->setText(m_fireBallEyeSizeText.arg(fireBallEyeSizeVal));
+    m_fireBallEyeSize->setText(m_fireBallEyeSizeText
+                                    .arg(fireBallEyeSizeVal).replace(".", ","));
 
     QString eyeEnDensityVal = QString::number(calc->getEyeEnDensity(), 'f', 1);
-    m_eyeEnDensity->setText(m_eyeEnDensityText.arg(eyeEnDensityVal));
+    m_eyeEnDensity->setText(m_eyeEnDensityText
+                                    .arg(eyeEnDensityVal).replace(".", ","));
 }
 
 void QAppWindow::rstResultFrame(){
-    QString noResult("...");
+    QString noResult("…");
     m_fireTime->setText(m_fireTimeText.arg(noResult));
     m_qDensity->setText(m_qDensityText.arg(noResult));
     m_eyeRadiationTime->setText(m_eyeRadiationTimeText.arg(noResult));
