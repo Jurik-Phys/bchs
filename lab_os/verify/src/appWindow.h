@@ -52,12 +52,14 @@ class QAppWindow : public QWidget {
         void onScrollResized(int, int);
         void appExit();
         void clearTexForm();
+        void rstInputData();
         void dataVariantSelected(int);
 
     private:
         const int    m_appWindowWidth = 1390;
         const int    m_appWindowHeight = 750;
         const int    m_texTextSize = 18;
+        QComboBox*   m_inputDataType;
         QFrame*      m_headFrame;
         QFrame*      m_inputFrame;
         QFrame*      m_texFrame;

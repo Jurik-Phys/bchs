@@ -104,13 +104,28 @@ void QAppWindow::gasExplosionCalculation(){
     addToTexFrame(m_latexTextBuilder->getTextStage02());
     addToTexFrame(m_latexTextBuilder->getTextStage03());
     addToTexFrame(m_latexTextBuilder->getTextStage04());
-    addToTexFrame(m_latexTextBuilder->getTextStage05());
-    addToTexFrame(m_latexTextBuilder->getTextStage06());
-    addToTexFrame(m_latexTextBuilder->getTextStage07());
-    addToTexFrame(m_latexTextBuilder->getTextStage08());
-    addToTexFrame(m_latexTextBuilder->getTextStage09());
 
-    updResultFrame(m_gasExplosionCalc);
+    double gasTemperature = m_gasExplosionCalc->getInitAccurateTg();
+    // 2200 - максимальная температура при сжигании углеводородного газа
+    if ( gasTemperature > 0 && gasTemperature < 2050){
+        // Physical model is Ok. Draw result;
+        addToTexFrame(m_latexTextBuilder->getTextStage05());
+        addToTexFrame(m_latexTextBuilder->getTextStage06());
+        addToTexFrame(m_latexTextBuilder->getTextStage07());
+        addToTexFrame(m_latexTextBuilder->getTextStage08());
+        addToTexFrame(m_latexTextBuilder->getTextStage09());
+
+        // Physical model is Ok & update result frame;
+        updResultFrame(m_gasExplosionCalc);
+    }
+    else {
+        // Physical model is bad. Draw error!;
+        qDebug() << "[EE] Erroneous parameters of the physical model";
+
+        // Physical model is bad & reset result frame;
+        rstResultFrame();
+    }
+
 }
 
 void QAppWindow::setTexFrame(){
@@ -180,6 +195,11 @@ void QAppWindow::clearTexForm(){
     qDebug() << "[II] Clear tex \"frames\" done";
 
     rstResultFrame();
+}
+
+void QAppWindow::rstInputData(){
+    m_inputDataType->setCurrentIndex(0);
+    dataVariantSelected(0);
 }
 
 void QAppWindow::dataVariantSelected(int index){
@@ -253,19 +273,19 @@ void QAppWindow::setHeaderFrame(){
     labTitle->setFont(font);
 
     // Center of header block
-    QComboBox *inputDataType = new QComboBox();
-    inputDataType->addItem("Ручной ввод данных");
-    inputDataType->addItem("Вариант расчёта №1");
-    inputDataType->addItem("Вариант расчёта №2");
-    inputDataType->addItem("Вариант расчёта №3");
-    inputDataType->addItem("Вариант расчёта №4");
-    inputDataType->addItem("Вариант расчёта №5");
-    inputDataType->addItem("Вариант расчёта №6");
-    inputDataType->addItem("Вариант расчёта №7");
-    inputDataType->addItem("Вариант расчёта №8");
-    inputDataType->addItem("Вариант расчёта №9");
-    inputDataType->addItem("Вариант расчёта №10");
-    QObject::connect(inputDataType, &QComboBox::activated,
+    m_inputDataType = new QComboBox();
+    m_inputDataType->addItem("Ручной ввод данных");
+    m_inputDataType->addItem("Вариант расчёта №1");
+    m_inputDataType->addItem("Вариант расчёта №2");
+    m_inputDataType->addItem("Вариант расчёта №3");
+    m_inputDataType->addItem("Вариант расчёта №4");
+    m_inputDataType->addItem("Вариант расчёта №5");
+    m_inputDataType->addItem("Вариант расчёта №6");
+    m_inputDataType->addItem("Вариант расчёта №7");
+    m_inputDataType->addItem("Вариант расчёта №8");
+    m_inputDataType->addItem("Вариант расчёта №9");
+    m_inputDataType->addItem("Вариант расчёта №10");
+    QObject::connect(m_inputDataType, &QComboBox::activated,
                                         this, &QAppWindow::dataVariantSelected);
 
     // Right of header block
@@ -275,7 +295,7 @@ void QAppWindow::setHeaderFrame(){
                                           &QAppWindow::gasExplosionCalculation);
 
     hHeadFrameLayout->addWidget(labTitle);
-    hHeadFrameLayout->addWidget(inputDataType);
+    hHeadFrameLayout->addWidget(m_inputDataType);
     hHeadFrameLayout->addWidget(clkBtn);
 }
 
@@ -425,6 +445,8 @@ void QAppWindow::setBtnFrame(){
                                                     this, &QAppWindow::appExit);
     QObject::connect(clearBtn, &QPushButton::clicked,
                                                this, &QAppWindow::clearTexForm);
+    QObject::connect(clearBtn, &QPushButton::clicked,
+                                               this, &QAppWindow::rstInputData);
     QObject::connect(saveBtn, &QPushButton::clicked,
                                                 this, &QAppWindow::saveTexForm);
 

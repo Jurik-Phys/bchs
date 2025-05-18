@@ -206,7 +206,7 @@ QString LatexTextBuilder::getTextStage03(){
 }
 
 QString LatexTextBuilder::getTextStage04(){
-    QString res, res0, res1a, res1b, res2;
+    QString res, res0, res1a, res1b, res2, res3NaN, res3Low, res3Hi;
 
     QString str1 = getNumericString(m_appCalc->
                            getPressureN2AtAirFlowRationLessOne("first"),"verb");
@@ -332,7 +332,6 @@ QString LatexTextBuilder::getTextStage04(){
 
     res1b = res1b.arg(str6).arg(str9).arg(str8).arg(str7).arg(str10);
 
-
     res2 = R"(
         \\
         \text{    После {%1} итераций п. 1 - 4 средняя температура зоны }
@@ -377,13 +376,113 @@ QString LatexTextBuilder::getTextStage04(){
     res2 = res2.arg(str11).arg(str12).arg(str13).arg(str14).arg(str15).
                 arg(str16).arg(str17).arg(str18);
 
-    if (m_appCalc->getInitTg("first") >= 950) {
-        res = res0 + res1a + res2;
+    res3NaN = R"(
+        \\
+        \text{    После {%1} итераций п. 1 - 4 средняя температура зоны }
+        \text{горения: }
+        \\
+        \textcolor{red}{
+            \begin{gather}
+                T_g = {%2}.
+            \end{gather}
+        }
+        \\
+        \text{  }
+        \\
+        \textcolor{red}{
+        \begin{gather}
+            \text{Ошибка расчёта средней температуры зоны горения, nan - }
+            \text{not a number.}
+        \end{gather}
+        }
+        \\
+        \textcolor{red}{
+        \begin{gather}
+            \text{Уточните исходные данные и повторите расчёт!}
+        \end{gather}
+        }
+        \\
+    )";
+
+    res3NaN = res3NaN.arg(str11).arg(str12);
+
+    res3Low = R"(
+        \\
+        \text{    После {%1} итераций п. 1 - 4 средняя температура зоны }
+        \text{горения: }
+        \\
+        \textcolor{red}{
+            \begin{gather}
+                T_g = {%2}.
+            \end{gather}
+        }
+        \\
+        \text{  }
+        \\
+        \begin{gather}
+            \textcolor{red}\text{  Ошибка расчёта средней температуры зоны }
+            \textcolor{red}\text{горения, отрицательное значение.}
+        \end{gather}
+        \\
+        \textcolor{red}{
+        \begin{gather}
+            \text{Уточните исходные данные и повторите расчёт!}
+        \end{gather}
+        }
+        \\
+    )";
+
+    res3Low = res3Low.arg(str11).arg(str12);
+
+    res3Hi = R"(
+        \\
+        \text{    После {%1} итераций п. 1 - 4 средняя температура зоны }
+        \text{горения: }
+        \\
+        \textcolor{red}{
+            \begin{gather}
+                T_g = {%2}.
+            \end{gather}
+        }
+        \\
+        \text{  }
+        \\
+        \begin{gather}
+            \textcolor{red}\text{  Ошибка расчёта средней температуры зоны }
+            \textcolor{red}\text{горения, значение более }
+            \textcolor{red}\text{$2050^{\text{ \LARGE\circ}}$C$.}
+        \end{gather}
+        \\
+        \textcolor{red}{
+        \begin{gather}
+            \text{Уточните исходные данные и повторите расчёт!}
+        \end{gather}
+        }
+        \\
+    )";
+
+    res3Hi = res3Hi.arg(str11).arg(str12);
+
+    // 2050 - максимальная температура при сжигании углеводородного газа
+    if (m_appCalc->getInitTg() > 0.0 && m_appCalc->getInitTg() < 2050.0){
+        if (m_appCalc->getInitTg("first") >= 950) {
+            res = res0 + res1a + res2;
+        }
+        else {
+            res = res0 + res1b + res2;
+        }
     }
     else {
-        res = res0 + res1b + res2;
+        if (std::isnan(m_appCalc->getInitTg())){
+            res = res0 + res3NaN;
+        }
+        if (m_appCalc->getInitTg() < 0){
+            res = res0 + res3Low;
+        }
+        if (m_appCalc->getInitTg() > 2050){
+            res = res0 + res3Hi;
+        }
     }
-
     return res;
 }
 
