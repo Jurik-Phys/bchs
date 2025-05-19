@@ -65,6 +65,7 @@ class QAppWindow : public QWidget {
         QFrame*      m_texFrame;
         QFrame*      m_sumFrame;
         QFrame*      m_btnFrame;
+        QFrame*      m_abtFrame;
         QVBoxLayout* m_appVLayout;
         QScrollArea* m_texScrollArea;
         QFrame*      m_scrollContainer;
@@ -80,6 +81,7 @@ class QAppWindow : public QWidget {
         QLabel*      m_eyeEnDensity;
         QString      m_eyeEnDensityText;
 
+        void setAboutFrame();
         void setHeaderFrame();
         void setInputDataFrame();
         void setTexFrame();

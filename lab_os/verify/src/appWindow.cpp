@@ -6,9 +6,10 @@
 QAppWindow::QAppWindow(QWidget *parent) : QWidget(parent) {
 
     this->resize(m_appWindowWidth, m_appWindowHeight);
-    this->setWindowTitle("Лаб. работа «Техногенный пожар». "
+    this->setWindowTitle("Лабораторная работа «Техногенный пожар». "
                          "Проверочный расчёт");
 
+    setAboutFrame();
     setHeaderFrame();
     setInputDataFrame();
     setTexFrame();
@@ -452,6 +453,29 @@ void QAppWindow::setBtnFrame(){
 
 }
 
+void QAppWindow::setAboutFrame(){
+    m_abtFrame = new QFrame;
+    m_abtFrame->setFrameShape(QFrame::StyledPanel);
+    m_abtFrame->setFrameShadow(QFrame::Plain);
+    m_abtFrame->setFixedHeight(34);
+    m_abtFrame->setFixedWidth(m_appWindowWidth/2.33);
+
+    QHBoxLayout* abtFrameHLayout = new QHBoxLayout(m_abtFrame);
+
+    QString text = "Овсянников Ю.М. "
+                "<style>a { text-decoration: none; }</style>"
+                "(<a href=jurik-phys.net>https://jurik-phys.net</a>) "
+                "по материалам кафедры БЖД "
+                "ИГЭУ (<a href=http://ispu.ru>http://ispu.ru</a>)";
+
+    QLabel* label = new QLabel(text);
+    label->setOpenExternalLinks(true);
+    label->setTextFormat(Qt::RichText);
+    label->setAlignment(Qt::AlignCenter);
+
+    abtFrameHLayout->addWidget(label);
+}
+
 void QAppWindow::setAppLayout(){
     // Window layout
     // AAAAA CCCCC
@@ -466,6 +490,7 @@ void QAppWindow::setAppLayout(){
     hAppWindowLayout->addLayout(vLColumnLayout);
     hAppWindowLayout->addLayout(vRColumnLayout);
 
+    vLColumnLayout->addWidget(m_abtFrame);
     vLColumnLayout->addWidget(m_headFrame);
     vLColumnLayout->addWidget(m_inputFrame);
     vLColumnLayout->addWidget(m_sumFrame);
