@@ -13,9 +13,46 @@ void LatexTextBuilder::init(GasExplosionCalc* calculator){
     m_appCalc = calculator;
 }
 
+QString LatexTextBuilder::getTextInitData(QString str1){
+    QString res;
+    res = R"(
+        \text{%1:} \\
+        \text{ - число атомов углерода в углеводородном газе x = %2 ед;} \\
+        \text{ - число атомов водорода в углеводородном газе y = %3 ед;} \\
+        \text{ - теплота сгорания углеводородного газа Q = %4 МДж/м}^3; \\
+        \text{ - верхний концентрационный предел воспламенения }
+                                    \text{газа e}_{\text{в}}\text{ = %5\%;} \\
+
+        \text{ - плотность газа при нормальных условиях ρ}_0
+                                                        \text{= %6 кг/м}^3; \\
+        \text{ - нормальная скорость распространения пламени V}_\text{н}
+                                                        \text{ = %7 м/c;} \\
+        \text{ - масса газа, образовавшего огневой шар G = %8 т;} \\
+        \text{ - расстояние от зоны горения до приёмника }
+                                            \text{ИК излучения h = %9 м;} \\
+        \text{ - время действия излучения на сетчатку глаза человека }
+                                        \text{t}_{\text{имп}}\text{ = %10 с.} \\
+    )" ;
+
+    QString str2 = getNumericString(m_appCalc->getCarbonAtomCount());
+    QString str3 = getNumericString(m_appCalc->getHydrogenAtomCount()); ;
+    QString str4 = getNumericString(m_appCalc->getGasHeatOfCombustion()); ;
+    QString str5 = getNumericString(m_appCalc->getUpperFlammabilityLimit()); ;
+    QString str6 = getNumericString(m_appCalc->getGasDensity()); ;
+    QString str7 = getNumericString(m_appCalc->getNormalFlameSpeed()); ;
+    QString str8 = getNumericString(m_appCalc->getGasMass()); ;
+    QString str9 = getNumericString(m_appCalc->getDistanceToReceiver()); ;
+    QString str10 = getNumericString(m_appCalc->getEyeRadiationTime()); ;
+
+    res = res.arg(str1).arg(str2).arg(str3).arg(str4).arg(str5).arg(str6)
+            .arg(str7).arg(str8).arg(str9).arg(str10);
+    return res;
+}
+
 QString LatexTextBuilder::getTextStage01(){
     QString res;
     res = R"(
+        \text{Алгоритм расчёта параметров техногенного пожара.} \\
         \text{1. Задаётся средняя температура $(T_{g})$ зоны горения в первом }
         \text{приближении, $^{\text{\LARGE{\circ}}}$C.}\\
         \begin{align}

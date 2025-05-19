@@ -101,6 +101,8 @@ void QAppWindow::gasExplosionCalculation(){
 
     clearTexForm();
 
+    QString inputDataType = m_inputDataType->currentText();
+    addToTexFrame(m_latexTextBuilder->getTextInitData(inputDataType));
     addToTexFrame(m_latexTextBuilder->getTextStage01());
     addToTexFrame(m_latexTextBuilder->getTextStage02());
     addToTexFrame(m_latexTextBuilder->getTextStage03());

@@ -12,6 +12,7 @@ class LatexTextBuilder {
         ~LatexTextBuilder();
 
         void init(GasExplosionCalc*);
+        QString getTextInitData(QString str = "Ручной ввод данных");
         QString getTextStage01();
         QString getTextStage02();
         QString getTextStage03();
