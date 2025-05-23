@@ -126,7 +126,7 @@ void QAppWindow::gasExplosionCalculation(){
         qDebug() << "[EE] Erroneous parameters of the physical model";
 
         // Physical model is bad & reset result frame;
-        rstResultFrame();
+        rstResultFrame("EE");
     }
 
 }
@@ -370,24 +370,24 @@ void QAppWindow::setSummaryFrame(){
     m_sumFrameVLayout   = new QVBoxLayout(m_sumFrame);
 
     // Set result output title
-    QLabel* outTitle = new QLabel();
-    outTitle->setText("Результаты расчёта");
-    outTitle->setAlignment(Qt::AlignCenter);
+    m_outTitle = new QLabel();
+    m_outTitle->setText("Результаты расчёта");
+    m_outTitle->setAlignment(Qt::AlignCenter);
 
     QFont font;
     font.setPointSize(12);
     font.setBold(true);
-    outTitle->setFont(font);
+    m_outTitle->setFont(font);
 
     // 1. fireTime
     m_fireTime          = new QLabel();
-    m_fireTimeText = QString("- время выгорания газа в огневом шаре, "
+    m_fireTimeText = QString("- время выгорания газа в огневом шаре "
                                                           "<i>t</i> = %1 c;" );
 
     // 2. qDensity
     m_qDensity          = new QLabel();
     m_qDensityText = QString("- плотность потока энергии у приёмника "
-                   "инфракрасного излучения, <i>q</i> = %1 Вт/м<sup>2</sup>;");
+                   "инфракрасного излучения <i>q</i> = %1 Вт/м<sup>2</sup>;");
 
     // 3. eyeRadiationTime
     m_eyeRadiationTime  = new QLabel();
@@ -397,14 +397,14 @@ void QAppWindow::setSummaryFrame(){
     // 4. fireBallEyeSize
     m_fireBallEyeSize   = new QLabel();
     m_fireBallEyeSizeText = QString("- диаметр отображения огневого шара на "
-                                            "сетчатке глаза, <i>d</i> = %1 мм");
+                                            "сетчатке глаза <i>d</i> = %1 мм");
 
     // 5. eyeEnDensity
     m_eyeEnDensity      = new QLabel();
     m_eyeEnDensityText = QString("- удельная энергия, поздействующая на "
-                "сетчатку глаза, <i>Q</i><sub>имп</sub> = %1 Дж/м<sup>2</sup>");
+                "сетчатку глаза <i>Q</i><sub>имп</sub> = %1 Дж/м<sup>2</sup>");
 
-    m_sumFrameVLayout->addWidget(outTitle);
+    m_sumFrameVLayout->addWidget(m_outTitle);
     m_sumFrameVLayout->addWidget(m_fireTime);
     m_sumFrameVLayout->addWidget(m_qDensity);
     m_sumFrameVLayout->addWidget(m_eyeRadiationTime);
@@ -523,7 +523,15 @@ void QAppWindow::updResultFrame(GasExplosionCalc* calc){
                                     .arg(eyeEnDensityVal).replace(".", ","));
 }
 
-void QAppWindow::rstResultFrame(){
+void QAppWindow::rstResultFrame(QString status){
+
+    if (status == "EE"){
+        m_outTitle->setStyleSheet("color: red;");
+    }
+    else {
+        m_outTitle->setStyleSheet("");
+    }
+
     QString noResult("…");
     m_fireTime->setText(m_fireTimeText.arg(noResult));
     m_qDensity->setText(m_qDensityText.arg(noResult));

@@ -70,6 +70,7 @@ class QAppWindow : public QWidget {
         QScrollArea* m_texScrollArea;
         QFrame*      m_scrollContainer;
         QVBoxLayout* m_sumFrameVLayout;
+        QLabel*      m_outTitle;
         QLabel*      m_fireTime;
         QString      m_fireTimeText;
         QLabel*      m_qDensity;
@@ -91,7 +92,7 @@ class QAppWindow : public QWidget {
 
         void addToTexFrame(QString);
         void updResultFrame(GasExplosionCalc*);
-        void rstResultFrame();
+        void rstResultFrame(QString status = "OK");
         void saveTexForm();
 
         struct InputData {
