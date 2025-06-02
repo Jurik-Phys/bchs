@@ -15,6 +15,8 @@ class LabSolver {
 
         void setInputData(const InputData&);
         InputData getInputData();
+        OutData getOutData();
+        RawData getRawData();
 
     private:
         InputData m_iData; // Входящие данные для расчёта;

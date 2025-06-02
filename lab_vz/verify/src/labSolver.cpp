@@ -16,6 +16,14 @@ InputData LabSolver::getInputData(){
     return m_iData;
 }
 
+OutData LabSolver::getOutData(){
+    return m_oData;
+}
+
+RawData LabSolver::getRawData(){
+    return m_rData;
+}
+
 void LabSolver::getSolve(){
     qDebug() << "[II] Start solver...";
     qDebug() << "[II] Input data:";
