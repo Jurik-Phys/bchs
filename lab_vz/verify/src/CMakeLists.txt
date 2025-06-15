@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.20)
 
 set(SOURCE_LIB appWindow.cpp \\
+               customTableDelegate.cpp \\
                labSolver.cpp)
 
 add_library(src-lib STATIC ${SOURCE_LIB})

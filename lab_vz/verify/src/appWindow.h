@@ -15,6 +15,7 @@
 #include <QHeaderView>
 #include "labSolver.h"
 #include "labDataInput.h"
+#include "customTableDelegate.h"
 
 class QAppWindow : public QWidget {
 
@@ -31,6 +32,7 @@ class QAppWindow : public QWidget {
 
     public slots:
         void onScrollResized(int, int);
+        void dataVariantSelected(int);
 
     protected:
         void resizeEvent(QResizeEvent *event) override;
@@ -57,6 +59,7 @@ class QAppWindow : public QWidget {
         void setResFrame();
         void setBtnFrame();
         void setMainWindowLayout();
+        void setTableValues();
 
         InputData m_iData;
         OutData   m_oData;

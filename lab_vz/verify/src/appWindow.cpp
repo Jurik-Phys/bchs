@@ -85,8 +85,8 @@ void QAppWindow::setHeaderFrame(){
     m_inputSelector->addItem("Вариант расчёта №8");
     m_inputSelector->addItem("Вариант расчёта №9");
     m_inputSelector->addItem("Вариант расчёта №10");
-//    QObject::connect(m_inputSelector, &QComboBox::activated,
-//                                        this, &QAppWindow::dataVariantSelected);
+    QObject::connect(m_inputSelector, &QComboBox::activated,
+                                        this, &QAppWindow::dataVariantSelected);
 
     // Right of header block
     QPushButton* runSolve = new QPushButton();
@@ -99,6 +99,22 @@ void QAppWindow::setHeaderFrame(){
     hHeaderFrameLayout->addWidget(runSolve);
 }
 
+void QAppWindow::dataVariantSelected(int index){
+    // Load data to vairable;
+    m_iData = labDataVariants[index];
+
+    // Set edit only for manual input
+    if (index != 0){
+        m_table->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    }
+    else {
+        m_table->setEditTriggers(QAbstractItemView::AllEditTriggers);
+    }
+
+    // Set table values
+    setTableValues();
+}
+
 void QAppWindow::setInputTableFrame(){
     m_inputTableFrame = new QFrame();
     m_inputTableFrame->setFrameShape(QFrame::StyledPanel);
@@ -109,8 +125,8 @@ void QAppWindow::setInputTableFrame(){
     m_table = new QTableWidget(8, 2, m_inputTableFrame);
 
     // Set custom delegate to table
-    // CustomTableDelegate* delegate = new CustomTableDelegate(m_table);
-    // m_table->setItemDelegate(delegate);
+    CustomTableDelegate* delegate = new CustomTableDelegate(m_table);
+    m_table->setItemDelegate(delegate);
 
     QHBoxLayout* hInputFrameLayout = new QHBoxLayout(m_inputTableFrame);
     hInputFrameLayout->addWidget(m_table);
@@ -132,23 +148,32 @@ void QAppWindow::setInputTableFrame(){
     tableHeaders << "Название величины" << "Значение";
     m_table->setHorizontalHeaderLabels(tableHeaders);
 
-    QStringList valueNameList = {
-        "Диаметр цилиндрического резервуара со сжатым газом (d), м",
-        "Длина цилиндрического резервуара со сжатым газом (l), м",
-        "Показатель адиабаты сжатого газа в резервуаре (k<sub>г</sub>)",
-        "Избыточное давление сжатого газа в резервуаре при "
-                                                "взрыве (p<sub>1</sub>), кПа",
-        "Плотность газа при нормальных условиях "
-                                          "(ρ<sub>г</sub>), кг/м<sup>3</sup>",
-        "Температура воздуха (t), °C",
-        "Коэффициент перехода (k<sub>ув</sub>) ",
-        "Расстояние от центра взрывной системы"
-                                "до приёмника уд. волны (R<sub>уд</sub>), м."
-    };
+    setTableValues();
+}
 
-    for (int row = 0; row < m_table->rowCount(); ++row) {
-        QLabel *label = new QLabel(valueNameList[row]);
-        m_table->setCellWidget(row,0, label);
+void QAppWindow::setTableValues(){
+
+    // Check exists name to prevent duplicate name values
+    if ( m_table->item(1, 1) == nullptr ) {
+
+        QStringList valueNameList = {
+            "Диаметр цилиндрического резервуара со сжатым газом (d), м",
+            "Длина цилиндрического резервуара со сжатым газом (l), м",
+            "Показатель адиабаты сжатого газа в резервуаре (k<sub>г</sub>)",
+            "Избыточное давление сжатого газа в резервуаре при "
+                                                  "взрыве (p<sub>1</sub>), кПа",
+            "Плотность газа при нормальных условиях "
+                                            "(ρ<sub>г</sub>), кг/м<sup>3</sup>",
+            "Температура воздуха (t), °C",
+            "Коэффициент перехода (k<sub>ув</sub>) ",
+            "Расстояние от центра взрывной системы"
+                                    "до приёмника уд. волны (R<sub>уд</sub>), м"
+        };
+
+        for (int row = 0; row < m_table->rowCount(); ++row) {
+            QLabel *label = new QLabel(valueNameList[row]);
+            m_table->setCellWidget(row,0, label);
+        }
     }
 
     for (int row = 0; row < m_table->rowCount(); ++row) {
