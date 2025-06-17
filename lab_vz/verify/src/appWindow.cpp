@@ -20,10 +20,6 @@ QAppWindow::QAppWindow(QWidget *parent) : QWidget(parent){
 
     m_labSolver = new LabSolver();
     m_labSolver->setInputData(m_iData);
-
-    m_labSolver->getSolve();
-    m_oData = m_labSolver->getOutData();
-    m_rData = m_labSolver->getRawData();
 }
 
 QAppWindow::~QAppWindow(){
@@ -91,8 +87,8 @@ void QAppWindow::setHeaderFrame(){
     // Right of header block
     QPushButton* runSolve = new QPushButton();
     runSolve->setText("Запустить расчёт");
-//    QObject::connect(runSolve, &QPushButton::clicked, this,
-//                                          &QAppWindow::gasExplosionCalculation);
+    QObject::connect(runSolve, &QPushButton::clicked, this,
+                                                   &QAppWindow::labSolveAndTex);
 
     hHeaderFrameLayout->addWidget(labTitle);
     hHeaderFrameLayout->addWidget(m_inputSelector);
@@ -115,6 +111,59 @@ void QAppWindow::dataVariantSelected(int index){
     setTableValues();
 }
 
+void QAppWindow::labSolveAndTex(){
+    m_labSolver->setInputData(m_iData);
+    m_labSolver->getSolve();
+    m_oData = m_labSolver->getOutData();
+    m_rData = m_labSolver->getRawData();
+
+    updResFrame();
+}
+
+void QAppWindow::updResFrame(){
+    // 1.
+    QString res1 = QString::number(m_oData.waveBurstPressure, 'f', 2);
+    m_waveBurstPressureOut->setText(m_waveBurstPressureText->arg(res1));
+
+    // 2.
+    QString res2 = QString::number(m_oData.compressImpulse, 'f', 2);
+    m_compressImpulseOut->setText(m_compressImpulseText->arg(res2));
+
+    // 3.
+    QString res3 = QString::number(m_oData.relativeWaveBurstPressure, 'f', 3);
+    m_relativeWaveBurstPressureOut->setText(m_relWaveBurstText->arg(res3));
+
+    // 4.
+    QString res4 = QString::number(m_oData.compressImpulseA, 'f', 3);
+    m_compressImpulseAOut->setText(m_compressImpulseAText->arg(res4));
+
+    // 5.
+    QString res5 = QString::number(m_oData.compressImpulseB, 'f', 2);
+    m_compressImpulseBOut->setText(m_compressImpulseBText->arg(res5));
+
+    // 6.
+    QString res6 = QString::number(m_oData.loud, 'f',1);
+    m_loudOut->setText(m_loudText->arg(res6));
+}
+
+void QAppWindow::rstResFrame(QString status){
+
+    if (status == "EE"){
+        // Reset after solver error
+        m_resTitle->setStyleSheet("color: red;");
+    }
+    else {
+        m_resTitle->setStyleSheet("");
+    }
+
+    QString noRes("…");
+    m_waveBurstPressureOut->setText(m_waveBurstPressureText->arg(noRes));
+    m_compressImpulseOut->setText(m_compressImpulseText->arg(noRes));
+    m_relativeWaveBurstPressureOut->setText(m_relWaveBurstText->arg(noRes));
+    m_compressImpulseAOut->setText(m_compressImpulseAText->arg(noRes));
+    m_compressImpulseBOut->setText(m_compressImpulseBText->arg(noRes));
+    m_loudOut->setText(m_loudText->arg(noRes));
+}
 void QAppWindow::setInputTableFrame(){
     m_inputTableFrame = new QFrame();
     m_inputTableFrame->setFrameShape(QFrame::StyledPanel);
@@ -127,6 +176,9 @@ void QAppWindow::setInputTableFrame(){
     // Set custom delegate to table
     CustomTableDelegate* delegate = new CustomTableDelegate(m_table);
     m_table->setItemDelegate(delegate);
+
+    QObject::connect(m_table, &QTableWidget::cellChanged, this,
+                                                  &QAppWindow::syncTableValues);
 
     QHBoxLayout* hInputFrameLayout = new QHBoxLayout(m_inputTableFrame);
     hInputFrameLayout->addWidget(m_table);
@@ -211,8 +263,58 @@ void QAppWindow::setTableValues(){
     }
 }
 
+void QAppWindow::syncTableValues(int row, int column){
+
+    QString tableValue;
+    tableValue = m_table->item(row, column)->text();
+
+    // Write table value to m_iData if values none equal
+    switch (row){
+        case 0:
+            if (QString::number(m_iData.gasTankDiameter) != tableValue){
+                m_iData.gasTankDiameter = tableValue.toDouble();
+            }
+            break;
+        case 1:
+            if ( QString::number(m_iData.gasTankLength) != tableValue){
+                m_iData.gasTankLength = tableValue.toDouble();
+            }
+            break;
+        case 2:
+            if ( QString::number(m_iData.gasAdiabaticIndex) != tableValue){
+                m_iData.gasAdiabaticIndex = tableValue.toDouble();
+            }
+            break;
+        case 3:
+            if ( QString::number(m_iData.tankBurstPressure) != tableValue){
+                m_iData.tankBurstPressure = tableValue.toDouble();
+            }
+            break;
+        case 4:
+            if ( QString::number(m_iData.ntpTankGasDensity) != tableValue){
+                m_iData.ntpTankGasDensity = tableValue.toDouble();
+            }
+            break;
+        case 5:
+            if ( QString::number(m_iData.airTemperature) != tableValue){
+                m_iData.airTemperature = tableValue.toDouble();
+            }
+            break;
+        case 6:
+            if ( QString::number(m_iData.releaseFraction) != tableValue){
+                m_iData.releaseFraction = tableValue.toDouble();
+            }
+            break;
+        case 7:
+            if ( QString::number(m_iData.standoffDistance) != tableValue){
+                m_iData.standoffDistance = tableValue.toDouble();
+            }
+            break;
+    }
+}
+
 void QAppWindow::setResFrame(){
-    QString noResult("…");
+    QString noRes("…");
 
     // (*) Widget
     m_resFrame = new QFrame();
@@ -221,55 +323,52 @@ void QAppWindow::setResFrame(){
     m_resFrame->setFixedWidth(m_appWindowWidth/2.33);
 
     // (**) Widget layout
-    // Set parent "m_resFrame" for skip
-    // m_resFrame->setLayout(m_resFrameVLayout)
     QVBoxLayout* resFrameVLayout = new QVBoxLayout(m_resFrame);
 
     // Title
-    QLabel* resTitle = new QLabel();
-    resTitle->setText("Результаты расчёта");
-    resTitle->setAlignment(Qt::AlignCenter);
+    m_resTitle = new QLabel();
+    m_resTitle->setText("Результаты расчёта");
+    m_resTitle->setAlignment(Qt::AlignCenter);
 
     QFont font;
     font.setPointSize(12);
     font.setBold(true);
-    resTitle->setFont(font);
+    m_resTitle->setFont(font);
 
     // 1.
-    QString waveBurstPressureText = QString("- избыточное давление воздуха "
+    m_waveBurstPressureText = new QString("- избыточное давление воздуха "
                             " на фронте ударной волны p<sub>s</sub> = %1 кПа;");
-    m_waveBurstPressureOut = new QLabel(waveBurstPressureText.arg(noResult));
+    m_waveBurstPressureOut = new QLabel(m_waveBurstPressureText->arg(noRes));
 
     // 2.
-    QString compressImpulseText = QString("- удельный положительный импульс"
+    m_compressImpulseText = new QString("- удельный положительный импульс"
             "фазы сжатия i<sub>s</sub> = %1 Па·с;");
-    m_compressImpulseOut = new QLabel(compressImpulseText.arg(noResult));
+    m_compressImpulseOut = new QLabel(m_compressImpulseText->arg(noRes));
 
     // 3.
-    QString relWaveBurstText = QString("- относительное избыточное давление "
-            "воздуха на фронте ударной волны P<sub>отн</sub> = %1 кПа;");
-    m_relativeWaveBurstPressureOut = new QLabel(relWaveBurstText.arg(noResult));
+    m_relWaveBurstText = new QString("- относительное избыточное давление "
+                   "воздуха на фронте ударной волны P<sub>отн</sub> = %1;");
+    m_relativeWaveBurstPressureOut = new QLabel(m_relWaveBurstText->arg(noRes));
 
     // 4.
-    QString compressImpulseAText = QString("- импульс фазы сжатия, приведённый "
+    m_compressImpulseAText = new QString("- импульс фазы сжатия, приведённый "
             "к атм. давлению и массе тела человека "
-                "i\u0305<sub>s</sub><sup>'</sup> = %1 √Па·с/кг<sup>1/3</sup>");
-    m_compressImpulseOut = new QLabel(compressImpulseText.arg(noResult));
-    m_compressImpulseAOut = new QLabel(compressImpulseAText.arg(noResult));
-    // m_compressImpulseAOut = new QLabel(compressImpulseAText.arg(noResult));
+                "i\u0305<sub>s</sub><sup>'</sup> = %1 Па<sup>1/2</sup>"
+                                                        "·с/кг<sup>1/3</sup>;");
+    m_compressImpulseAOut = new QLabel(m_compressImpulseAText->arg(noRes));
 
     // 5.
-    QString compressImpulseBText = QString("- импульс фазы сжатия, приведённый "
+    m_compressImpulseBText = new QString("- импульс фазы сжатия, приведённый "
             " к масе тела человека i\u0305<sub>s</sub><sup>''</sup> = %1 "
             "Па·с/кг<sup>1/3</sup>;");
-    m_compressImpulseBOut = new QLabel(compressImpulseBText.arg(noResult));
+    m_compressImpulseBOut = new QLabel(m_compressImpulseBText->arg(noRes));
 
     // 6.
-    QString loudText = QString("- уровень звукового давления у приёмника "
+    m_loudText = new QString("- уровень звукового давления у приёмника "
             "ударной волны L<sub>p</sub> = %1 дБ.");
-    m_loudOut = new QLabel(loudText.arg(noResult));
+    m_loudOut = new QLabel(m_loudText->arg(noRes));
 
-    resFrameVLayout->addWidget(resTitle);
+    resFrameVLayout->addWidget(m_resTitle);
     resFrameVLayout->addWidget(m_waveBurstPressureOut);
     resFrameVLayout->addWidget(m_compressImpulseOut);
     resFrameVLayout->addWidget(m_relativeWaveBurstPressureOut);
@@ -343,14 +442,12 @@ void QAppWindow::setBtnFrame(){
     btnFrameHLayout->addWidget(clearBtn);
     btnFrameHLayout->addWidget(closeBtn);
 
-    // m_btnFrame->setLayout(btnFrameHLayout);
-
     QObject::connect(closeBtn, &QPushButton::clicked,
                                                     this, &QAppWindow::appExit);
+    QObject::connect(clearBtn, &QPushButton::clicked,
+                                               this, &QAppWindow::rstInputData);
     // QObject::connect(clearBtn, &QPushButton::clicked,
     //                                            this, &QAppWindow::clearTexForm);
-    // QObject::connect(clearBtn, &QPushButton::clicked,
-    //                                            this, &QAppWindow::rstInputData);
     // QObject::connect(saveBtn, &QPushButton::clicked,
     //                                             this, &QAppWindow::saveTexForm);
 
@@ -365,6 +462,12 @@ void QAppWindow::appExit(){
         QApplication::quit();
     }
 
+}
+
+void QAppWindow::rstInputData(){
+    m_inputSelector->setCurrentIndex(0);
+    dataVariantSelected(0);
+    rstResFrame();
 }
 
 void QAppWindow::setMainWindowLayout(){

@@ -33,6 +33,8 @@ class QAppWindow : public QWidget {
     public slots:
         void onScrollResized(int, int);
         void dataVariantSelected(int);
+        void rstInputData();
+        void labSolveAndTex();
 
     protected:
         void resizeEvent(QResizeEvent *event) override;
@@ -57,20 +59,30 @@ class QAppWindow : public QWidget {
         void setInputTableFrame();
         void setTeXFrame();
         void setResFrame();
+        void updResFrame();
+        void rstResFrame(QString status = "OK");
         void setBtnFrame();
         void setMainWindowLayout();
         void setTableValues();
+        void syncTableValues(int, int);
 
         InputData m_iData;
         OutData   m_oData;
         RawData   m_rData;
 
+        QLabel* m_resTitle;
         QLabel* m_waveBurstPressureOut;
         QLabel* m_compressImpulseOut;
         QLabel* m_relativeWaveBurstPressureOut;
         QLabel* m_compressImpulseAOut;
         QLabel* m_compressImpulseBOut;
         QLabel* m_loudOut;
+        QString* m_waveBurstPressureText;
+        QString* m_compressImpulseText;
+        QString* m_relWaveBurstText;
+        QString* m_compressImpulseAText;
+        QString* m_compressImpulseBText;
+        QString* m_loudText;
 };
 
 
