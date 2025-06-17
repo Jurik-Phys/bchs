@@ -1,7 +1,9 @@
 cmake_minimum_required(VERSION 3.20)
 
-set(SOURCE_LIB appWindow.cpp \\
-               customTableDelegate.cpp \\
+set(SOURCE_LIB ${CMAKE_SOURCE_DIR}/ext/MicroTeX/example/qt/qt_texwidget.cpp
+               appWindow.cpp
+               customTableDelegate.cpp
+               texBuilder.cpp
                labSolver.cpp)
 
 add_library(src-lib STATIC ${SOURCE_LIB})

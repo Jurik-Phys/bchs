@@ -20,6 +20,9 @@ QAppWindow::QAppWindow(QWidget *parent) : QWidget(parent){
 
     m_labSolver = new LabSolver();
     m_labSolver->setInputData(m_iData);
+
+    m_texBuilder = new TeXBuilder();
+    m_texBuilder->init(m_labSolver);
 }
 
 QAppWindow::~QAppWindow(){
@@ -114,10 +117,11 @@ void QAppWindow::dataVariantSelected(int index){
 void QAppWindow::labSolveAndTex(){
     m_labSolver->setInputData(m_iData);
     m_labSolver->getSolve();
-    m_oData = m_labSolver->getOutData();
-    m_rData = m_labSolver->getRawData();
 
+    m_oData = m_labSolver->getOutData();
     updResFrame();
+
+    addToTeXFrame("A+B=C");
 }
 
 void QAppWindow::updResFrame(){
@@ -393,12 +397,12 @@ void QAppWindow::setTeXFrame(){
     m_texFrame->setStyleSheet("background-color: white;");
 
     // (**) Widget layout
-    QVBoxLayout* vTeXLayout = new QVBoxLayout(m_texFrame);
-    vTeXLayout->setContentsMargins(0, 0, 0, 0);
+    m_vTeXLayout = new QVBoxLayout(m_texFrame);
+    m_vTeXLayout->setContentsMargins(0, 0, 0, 0);
 
     QSpacerItem *spacer = new QSpacerItem(0, 0, QSizePolicy::Expanding,
                                                         QSizePolicy::Expanding);
-    vTeXLayout->addSpacerItem(spacer);
+    m_vTeXLayout->addSpacerItem(spacer);
 
     vTeXBaseFrameLayout->addWidget(m_texFrame);
 
@@ -446,8 +450,8 @@ void QAppWindow::setBtnFrame(){
                                                     this, &QAppWindow::appExit);
     QObject::connect(clearBtn, &QPushButton::clicked,
                                                this, &QAppWindow::rstInputData);
-    // QObject::connect(clearBtn, &QPushButton::clicked,
-    //                                            this, &QAppWindow::clearTexForm);
+    QObject::connect(clearBtn, &QPushButton::clicked,
+                                               this, &QAppWindow::clsTeXFrame);
     // QObject::connect(saveBtn, &QPushButton::clicked,
     //                                             this, &QAppWindow::saveTexForm);
 
@@ -487,5 +491,47 @@ void QAppWindow::setMainWindowLayout(){
     vRColumnLayout->addWidget(m_texScrollArea);
 
     this->setLayout(hAppLayout);
+}
+
+void QAppWindow::clsTeXFrame(){
+    qDebug() << "\n[II] Clear tex \"frames\" from output";
+
+    // One is a spacer in m_texLayout;
+    int framesCount = m_vTeXLayout->count() - 1;
+    qDebug() << "[II] Separate tex frames count:"<< framesCount;
+    for (int i = framesCount; i >= 0; --i) {
+        QLayoutItem* item = m_vTeXLayout->itemAt(i);
+        if (item) {
+            QWidget* widget = item->widget();
+            if (widget){
+                m_vTeXLayout->removeWidget(widget);
+                widget->deleteLater();
+            }
+            else {
+                qDebug() << "[II] Probably a layout or stretch with index" << i;
+            }
+        }
+    }
+    qDebug() << "[II] Clear tex \"frames\" done";
+}
+
+void QAppWindow::addToTeXFrame(QString text){
+
+    TeXWidget* texWidget = new TeXWidget(nullptr, m_texTextSize);
+    texWidget->setLaTeX(text.toStdString());
+
+    // Each added texWidget is located in a separate QFrame
+    QFrame* texFrame = new QFrame;
+    texFrame->setFrameShape(QFrame::NoFrame);
+    texFrame->setFrameShadow(QFrame::Plain);
+    texFrame->setFixedHeight(texWidget->getRenderHeight() - 18.0);
+    texFrame->setFixedWidth(m_appWindowWidth/1.86);
+    QVBoxLayout* vTexFrame = new QVBoxLayout(texFrame);
+    vTexFrame->setContentsMargins(0, 0, 0, 0);
+    vTexFrame->addWidget(texWidget);
+
+    // Add vTexFrame to m_texLayout
+    m_vTeXLayout->insertWidget(m_vTeXLayout->count() - 1, texFrame, 0,
+                                                   Qt::AlignmentFlag::AlignTop);
 }
 // End appWindow.cpp

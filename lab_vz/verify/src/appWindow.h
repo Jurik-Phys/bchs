@@ -15,7 +15,10 @@
 #include <QHeaderView>
 #include "labSolver.h"
 #include "labDataInput.h"
+#include "texBuilder.h"
 #include "customTableDelegate.h"
+#include "microtex.h"
+#include "qt_texwidget.h"
 
 class QAppWindow : public QWidget {
 
@@ -42,7 +45,10 @@ class QAppWindow : public QWidget {
     private:
         const int m_appWindowWidth = 1390;
         const int m_appWindowHeight = 750;
+        const int m_texTextSize = 18;
         LabSolver* m_labSolver;
+        TeXBuilder* m_texBuilder;
+        QVBoxLayout* m_vTeXLayout;
         QFrame*    m_aboutFrame;
         QFrame*    m_headerFrame;
         QFrame*    m_inputTableFrame;
@@ -58,6 +64,7 @@ class QAppWindow : public QWidget {
         void setHeaderFrame();
         void setInputTableFrame();
         void setTeXFrame();
+        void clsTeXFrame();
         void setResFrame();
         void updResFrame();
         void rstResFrame(QString status = "OK");
@@ -65,10 +72,10 @@ class QAppWindow : public QWidget {
         void setMainWindowLayout();
         void setTableValues();
         void syncTableValues(int, int);
+        void addToTeXFrame(QString);
 
         InputData m_iData;
         OutData   m_oData;
-        RawData   m_rData;
 
         QLabel* m_resTitle;
         QLabel* m_waveBurstPressureOut;
