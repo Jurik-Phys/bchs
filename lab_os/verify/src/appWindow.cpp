@@ -459,7 +459,7 @@ void QAppWindow::setAboutFrame(){
     m_abtFrame = new QFrame;
     m_abtFrame->setFrameShape(QFrame::StyledPanel);
     m_abtFrame->setFrameShadow(QFrame::Plain);
-    m_abtFrame->setFixedHeight(34);
+    m_abtFrame->setFixedHeight(38);
     m_abtFrame->setFixedWidth(m_appWindowWidth/2.33);
 
     QHBoxLayout* abtFrameHLayout = new QHBoxLayout(m_abtFrame);
