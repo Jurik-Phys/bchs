@@ -72,7 +72,7 @@ struct RawData{
     double waveBurstPressure;
     // Скорость звука при атмосферном давлении, м/с.
     double airSndSpeed;
-    // Скорость воздушного потока, м/c.
+    // Скорость воздушного потока (V_s), м/c.
     double airFlowSpeed;
     // Скорость движения фронта (D) ударной волны, м/с.
     double waveBurstSpeed;
@@ -80,6 +80,8 @@ struct RawData{
     double dynParamT0;
     // Безразмерное расстояние (R_alpha), зависящее от энергетического параметра
     double raDistance;
+    // Величина dR для итерационного цикла от 1 до 500
+    double deltaR;
     // Безразмерное время (tau).
     double tauResult;
     // Массив итерационных величин безразмерного времени (tau).

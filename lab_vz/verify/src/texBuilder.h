@@ -21,7 +21,8 @@ class TeXBuilder {
         QString getStage04_AirFlowSpeedTeX();
         QString getStage05_WaveBurstSpeedTeX();
         QString getStage06_StandoffTimeTeX();
-        QString getStage06_FinalizeSolutionTeX();
+        QString getStage07_FinalizeSolutionTeX();
+        QString getResultsTeX();
 
     private:
         LabSolver* m_labSolver;

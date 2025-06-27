@@ -12,6 +12,7 @@ class LabSolver {
 
         // Запуск расчёта (получить решение)
         void getSolve();
+        double getPI();
 
         void setInputData(const InputData&);
         InputData getInputData();
@@ -31,6 +32,8 @@ class LabSolver {
         void solveStage06();
         void solveStage07();
         void solveSaveOut();
+
+        const double m_PI = 3.141592653589793;
 };
 
 #endif

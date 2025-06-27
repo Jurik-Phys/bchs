@@ -155,6 +155,7 @@ void LabSolver::solveStage06(){
     double& airDensity = m_iData.airDensity;
     double& rsDistance = m_rData.rsDistance;
     double& raDistance = m_rData.raDistance;
+    double& deltaR     = m_rData.deltaR;
     double& airPressure = m_iData.airPressure;
     double& standoffTime = m_rData.standoffTime;
     double& airAdiabaticIndex = m_iData.airAdiabaticIndex;
@@ -165,7 +166,7 @@ void LabSolver::solveStage06(){
     raDistance = 0.01/pow(alpha, 0.2);
 
     tauArray[0] = 0.00001;
-    double deltaR = (rsDistance - raDistance)/ (double)tauItCount;
+    deltaR = (rsDistance - raDistance)/ (double)tauItCount;
 
     for (int i = 1; i < tauItCount + 1; ++i){
         tauArray[i] = tauArray[i-1]
@@ -259,6 +260,10 @@ void LabSolver::solveSaveOut(){
     qDebug() << "     compressImpulseA:"  <<      m_oData.compressImpulseA;
     qDebug() << "     compressImpulseB:"  <<      m_oData.compressImpulseB;
     qDebug() << "     loud:"              <<      m_oData.loud;
+}
+
+double LabSolver::getPI(){
+    return m_PI;
 }
 
 // End labSolver.cpp

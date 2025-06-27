@@ -32,7 +32,7 @@ void QAppWindow::setAboutFrame(){
     m_aboutFrame = new QFrame();
     m_aboutFrame->setFrameShape(QFrame::StyledPanel);
     m_aboutFrame->setFrameShadow(QFrame::Plain);
-    m_aboutFrame->setFixedHeight(35);
+    m_aboutFrame->setFixedHeight(38);
     m_aboutFrame->setFixedWidth(m_appWindowWidth/2.33);
 
     QHBoxLayout* aboutFrameHLayout = new QHBoxLayout(m_aboutFrame);
@@ -121,7 +121,16 @@ void QAppWindow::labSolveAndTex(){
     m_oData = m_labSolver->getOutData();
     updResFrame();
 
-    addToTeXFrame("A+B=C");
+    QString inputDataType = m_inputSelector->currentText();
+    addToTeXFrame(m_texBuilder->getInitDataTeX(inputDataType));
+    addToTeXFrame(m_texBuilder->getStage01_BurstEnergyTeX());
+    addToTeXFrame(m_texBuilder->getStage02_TNTEquivalentTeX());
+    addToTeXFrame(m_texBuilder->getStage03_WaveBurstPressureTeX());
+    addToTeXFrame(m_texBuilder->getStage04_AirFlowSpeedTeX());
+    addToTeXFrame(m_texBuilder->getStage05_WaveBurstSpeedTeX());
+    addToTeXFrame(m_texBuilder->getStage06_StandoffTimeTeX());
+    addToTeXFrame(m_texBuilder->getStage07_FinalizeSolutionTeX());
+    addToTeXFrame(m_texBuilder->getResultsTeX());
 }
 
 void QAppWindow::updResFrame(){
