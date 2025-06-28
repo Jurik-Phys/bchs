@@ -6,6 +6,7 @@
 #include <QBoxLayout>
 #include <QWidget>
 #include <QTableWidget>
+#include <QFileDialog>
 #include <QMessageBox>
 #include <QLabel>
 #include <QScrollArea>
@@ -73,6 +74,7 @@ class QAppWindow : public QWidget {
         void setTableValues();
         void syncTableValues(int, int);
         void addToTeXFrame(QString);
+        void saveTeXForm();
 
         InputData m_iData;
         OutData   m_oData;
@@ -90,6 +92,10 @@ class QAppWindow : public QWidget {
         QString* m_compressImpulseAText;
         QString* m_compressImpulseBText;
         QString* m_loudText;
+
+        QPushButton* m_closeBtn;
+        QPushButton* m_clearBtn;
+        QPushButton* m_saveBtn;
 };
 
 

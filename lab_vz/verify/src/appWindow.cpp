@@ -92,6 +92,8 @@ void QAppWindow::setHeaderFrame(){
     runSolve->setText("Запустить расчёт");
     QObject::connect(runSolve, &QPushButton::clicked, this,
                                                    &QAppWindow::labSolveAndTex);
+    QObject::connect(runSolve, &QPushButton::clicked,[this]() {
+                                                 m_saveBtn->setEnabled(true);});
 
     hHeaderFrameLayout->addWidget(labTitle);
     hHeaderFrameLayout->addWidget(m_inputSelector);
@@ -120,6 +122,9 @@ void QAppWindow::labSolveAndTex(){
 
     m_oData = m_labSolver->getOutData();
     updResFrame();
+
+    // Clear TeX frame
+    clsTeXFrame();
 
     QString inputDataType = m_inputSelector->currentText();
     addToTeXFrame(m_texBuilder->getInitDataTeX(inputDataType));
@@ -435,7 +440,7 @@ void QAppWindow::resizeEvent(QResizeEvent *event) {
 }
 
 void QAppWindow::setBtnFrame(){
-        m_btnFrame = new QFrame;
+    m_btnFrame = new QFrame;
     m_btnFrame->setFrameShape(QFrame::StyledPanel);
     m_btnFrame->setFrameShadow(QFrame::Raised);
     m_btnFrame->setFixedHeight(70);
@@ -443,26 +448,29 @@ void QAppWindow::setBtnFrame(){
 
     QHBoxLayout* btnFrameHLayout = new QHBoxLayout(m_btnFrame);
 
-    QPushButton* closeBtn = new QPushButton;
-    QPushButton* clearBtn = new QPushButton;
-    QPushButton* saveBtn  = new QPushButton;
+    m_closeBtn = new QPushButton;
+    m_clearBtn = new QPushButton;
+    m_saveBtn  = new QPushButton;
 
-    closeBtn->setText("Выход");
-    saveBtn->setText("Сохранить");
-    clearBtn->setText("Сброс");
+    m_closeBtn->setText("Выход");
+    m_saveBtn->setText("Сохранить");
+    m_saveBtn->setEnabled(false);
+    m_clearBtn->setText("Сброс");
 
-    btnFrameHLayout->addWidget(saveBtn);
-    btnFrameHLayout->addWidget(clearBtn);
-    btnFrameHLayout->addWidget(closeBtn);
+    btnFrameHLayout->addWidget(m_saveBtn);
+    btnFrameHLayout->addWidget(m_clearBtn);
+    btnFrameHLayout->addWidget(m_closeBtn);
 
-    QObject::connect(closeBtn, &QPushButton::clicked,
+    QObject::connect(m_closeBtn, &QPushButton::clicked,
                                                     this, &QAppWindow::appExit);
-    QObject::connect(clearBtn, &QPushButton::clicked,
+    QObject::connect(m_clearBtn, &QPushButton::clicked,
                                                this, &QAppWindow::rstInputData);
-    QObject::connect(clearBtn, &QPushButton::clicked,
-                                               this, &QAppWindow::clsTeXFrame);
-    // QObject::connect(saveBtn, &QPushButton::clicked,
-    //                                             this, &QAppWindow::saveTexForm);
+    QObject::connect(m_clearBtn, &QPushButton::clicked,[this]() {
+                                                m_saveBtn->setEnabled(false);});
+    QObject::connect(m_clearBtn, &QPushButton::clicked,
+                                                this, &QAppWindow::clsTeXFrame);
+    QObject::connect(m_saveBtn, &QPushButton::clicked,
+                                                this, &QAppWindow::saveTeXForm);
 
 }
 
@@ -542,5 +550,25 @@ void QAppWindow::addToTeXFrame(QString text){
     // Add vTexFrame to m_texLayout
     m_vTeXLayout->insertWidget(m_vTeXLayout->count() - 1, texFrame, 0,
                                                    Qt::AlignmentFlag::AlignTop);
+}
+
+void QAppWindow::saveTeXForm(){
+    qDebug() << "[II] save LaTeX solver result";
+
+    QString fileName = QFileDialog::getSaveFileName(this,
+                             "Сохранить изображение", "", "PNG Images (*.png)");
+
+    if (!fileName.isEmpty()){
+        if (!fileName.endsWith(".png", Qt::CaseInsensitive)){
+            fileName += ".png";
+        }
+
+        QPixmap pixmap(m_texFrame->size());
+        m_texFrame->render(&pixmap);
+
+        if (!pixmap.save(fileName)){
+            qDebug() << "[WW] Не удалось сохранить изображение";
+        }
+    }
 }
 // End appWindow.cpp
