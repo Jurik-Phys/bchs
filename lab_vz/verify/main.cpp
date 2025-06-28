@@ -1,5 +1,9 @@
 #include "appWindow.h"
 
+#ifdef Q_OS_WIN
+    #include <windows.h>
+#endif
+
 void initQtTeX() {
     // "openmath" rendering quality worse than "master" branch (for Windows)
     // https://github.com/NanoMichael/MicroTeX/issues/159
@@ -12,9 +16,14 @@ void initQtTeX() {
 
 int main(int argc, char** argv){
 
+    #ifdef Q_OS_WIN
+	    // Console output. Work with MSYS2 terminal
+	    AttachConsole(ATTACH_PARENT_PROCESS);
+    #endif
+
     QApplication app(argc, argv);
     QApplication::setStyle("Fusion");
-    // QIcon appIcon(":/icon.png");
+    QIcon appIcon(":/icon.png");
 
     // Use this fonts file for draw formula
     // copy file from "ext/MicroTeX/res/firamath"
@@ -27,7 +36,7 @@ int main(int argc, char** argv){
     initQtTeX();
 
     QAppWindow appWindow;
-    // appWindow.setWindowIcon(appIcon);
+    appWindow.setWindowIcon(appIcon);
     appWindow.show();
 
     int res = app.exec();
