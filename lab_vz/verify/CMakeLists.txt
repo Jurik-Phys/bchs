@@ -40,6 +40,6 @@ set(SOURCE_EXE main.cpp)
 add_subdirectory(src)
 add_subdirectory(${PROJECT_SOURCE_DIR}/../../libTeX ${CMAKE_BINARY_DIR}/libTeX)
 
-add_executable(lab_vz_verify ${SOURCE_EXE} ${RESOURCES} ${APP_ICON_RESOURCE_WINDOWS})
+add_executable(lab_vz_verify ${WIN_FLAG} ${SOURCE_EXE} ${RESOURCES} ${APP_ICON_RESOURCE_WINDOWS})
 
 target_link_libraries(lab_vz_verify PRIVATE src-lib Qt6::Widgets microtex microtex-qt)
