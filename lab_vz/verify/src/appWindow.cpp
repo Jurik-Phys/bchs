@@ -141,26 +141,32 @@ void QAppWindow::labSolveAndTex(){
 void QAppWindow::updResFrame(){
     // 1.
     QString res1 = QString::number(m_oData.waveBurstPressure, 'f', 2);
+    res1.replace(".", ",");
     m_waveBurstPressureOut->setText(m_waveBurstPressureText->arg(res1));
 
     // 2.
     QString res2 = QString::number(m_oData.compressImpulse, 'f', 2);
+    res2.replace(".", ",");
     m_compressImpulseOut->setText(m_compressImpulseText->arg(res2));
 
     // 3.
     QString res3 = QString::number(m_oData.relativeWaveBurstPressure, 'f', 3);
+    res3.replace(".", ",");
     m_relativeWaveBurstPressureOut->setText(m_relWaveBurstText->arg(res3));
 
     // 4.
     QString res4 = QString::number(m_oData.compressImpulseA, 'f', 3);
+    res4.replace(".", ",");
     m_compressImpulseAOut->setText(m_compressImpulseAText->arg(res4));
 
     // 5.
     QString res5 = QString::number(m_oData.compressImpulseB, 'f', 2);
+    res5.replace(".", ",");
     m_compressImpulseBOut->setText(m_compressImpulseBText->arg(res5));
 
     // 6.
     QString res6 = QString::number(m_oData.loud, 'f',1);
+    res6.replace(".", ",");
     m_loudOut->setText(m_loudText->arg(res6));
 }
 
