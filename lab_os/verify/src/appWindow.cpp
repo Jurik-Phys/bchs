@@ -117,6 +117,7 @@ void QAppWindow::gasExplosionCalculation(){
         addToTexFrame(m_latexTextBuilder->getTextStage07());
         addToTexFrame(m_latexTextBuilder->getTextStage08());
         addToTexFrame(m_latexTextBuilder->getTextStage09());
+        addToTexFrame(m_latexTextBuilder->getResultTeX());
 
         // Physical model is Ok & update result frame;
         updResultFrame(m_gasExplosionCalc);
