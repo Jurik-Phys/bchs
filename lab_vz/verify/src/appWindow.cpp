@@ -423,14 +423,6 @@ void QAppWindow::setTeXFrame(){
     m_texScrollArea = new QScrollArea(m_texBaseFrame);
     m_texScrollArea->setWidgetResizable(true);
     m_texScrollArea->setWidget(m_texFrame);
-
-// connect(this, &QAppWindow::texBaseFrameResized,
-//                                        this, &QAppWindow::onScrollResized);
-}
-
-void QAppWindow::onScrollResized(int width, int height){
-    m_texScrollArea->setFixedWidth(width);
-    m_texScrollArea->setFixedHeight(height);
 }
 
 void QAppWindow::resizeEvent(QResizeEvent *event) {

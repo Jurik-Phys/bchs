@@ -35,7 +35,6 @@ class QAppWindow : public QWidget {
         void texBaseFrameResized(int, int);
 
     public slots:
-        void onScrollResized(int, int);
         void dataVariantSelected(int);
         void rstInputData();
         void labSolveAndTex();
