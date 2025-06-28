@@ -106,6 +106,10 @@ class QAppWindow : public QWidget {
             double distanceToReceiver;
             double eyeRadiationTime;
         };
+
+        QPushButton* m_closeBtn;
+        QPushButton* m_clearBtn;
+        QPushButton* m_saveBtn;
 };
 
 #endif

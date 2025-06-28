@@ -1,10 +1,10 @@
 cmake_minimum_required(VERSION 3.20)
 
-set(SOURCE_LIB appWindow.cpp \\
-               qt_texwidget.cpp \\
-               gasExplosionCalc.cpp \\
-               customTableDelegate.cpp \\
-               latexTextBuilder.cpp )
+set(SOURCE_LIB ${PROJECT_SOURCE_DIR}/../../libTeX/example/qt/qt_texwidget.cpp
+               appWindow.cpp
+               gasExplosionCalc.cpp
+               customTableDelegate.cpp
+               latexTextBuilder.cpp)
 
 add_library(src-lib STATIC ${SOURCE_LIB})
 

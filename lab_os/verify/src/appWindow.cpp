@@ -117,6 +117,7 @@ void QAppWindow::gasExplosionCalculation(){
         addToTexFrame(m_latexTextBuilder->getTextStage07());
         addToTexFrame(m_latexTextBuilder->getTextStage08());
         addToTexFrame(m_latexTextBuilder->getTextStage09());
+        addToTexFrame(m_latexTextBuilder->getResultTeX());
 
         // Physical model is Ok & update result frame;
         updResultFrame(m_gasExplosionCalc);
@@ -140,7 +141,7 @@ void QAppWindow::setTexFrame(){
     QVBoxLayout* scrollContainerLayout = new QVBoxLayout(m_scrollContainer);
     scrollContainerLayout->setContentsMargins(0, 0, 0, 0);
 
-    m_texFrame = new QFrame;
+    m_texFrame = new QFrame();
     m_texFrame->setFrameShape(QFrame::NoFrame);
     m_texFrame->setStyleSheet("background-color: white;");
     m_texLayout = new QVBoxLayout(m_texFrame);
@@ -158,7 +159,7 @@ void QAppWindow::setTexFrame(){
     m_texScrollArea->setWidget(m_texFrame);
 
     connect(this, &QAppWindow::scrollContainerResized,
-            this, &QAppWindow::onScrollResized);
+           this, &QAppWindow::onScrollResized);
 }
 
 void QAppWindow::onScrollResized(int width, int height){
@@ -296,6 +297,8 @@ void QAppWindow::setHeaderFrame(){
     clkBtn->setText("Запустить расчёт");
     QObject::connect(clkBtn, &QPushButton::clicked, this,
                                           &QAppWindow::gasExplosionCalculation);
+    QObject::connect(clkBtn, &QPushButton::clicked, [this](){
+                                                 m_saveBtn->setEnabled(true);});
 
     hHeadFrameLayout->addWidget(labTitle);
     hHeadFrameLayout->addWidget(m_inputDataType);
@@ -430,27 +433,30 @@ void QAppWindow::setBtnFrame(){
 
     QHBoxLayout* btnFrameHLayout = new QHBoxLayout(m_btnFrame);
 
-    QPushButton* closeBtn = new QPushButton;
-    QPushButton* clearBtn = new QPushButton;
-    QPushButton* saveBtn  = new QPushButton;
+    m_closeBtn = new QPushButton;
+    m_clearBtn = new QPushButton;
+    m_saveBtn  = new QPushButton;
 
-    closeBtn->setText("Выход");
-    saveBtn->setText("Сохранить");
-    clearBtn->setText("Сброс");
+    m_closeBtn->setText("Выход");
+    m_saveBtn->setText("Сохранить");
+    m_saveBtn->setEnabled(false);
+    m_clearBtn->setText("Сброс");
 
-    btnFrameHLayout->addWidget(saveBtn);
-    btnFrameHLayout->addWidget(clearBtn);
-    btnFrameHLayout->addWidget(closeBtn);
+    btnFrameHLayout->addWidget(m_saveBtn);
+    btnFrameHLayout->addWidget(m_clearBtn);
+    btnFrameHLayout->addWidget(m_closeBtn);
 
     m_btnFrame->setLayout(btnFrameHLayout);
 
-    QObject::connect(closeBtn, &QPushButton::clicked,
+    QObject::connect(m_closeBtn, &QPushButton::clicked,
                                                     this, &QAppWindow::appExit);
-    QObject::connect(clearBtn, &QPushButton::clicked,
+    QObject::connect(m_clearBtn, &QPushButton::clicked,
                                                this, &QAppWindow::clearTexForm);
-    QObject::connect(clearBtn, &QPushButton::clicked,
+    QObject::connect(m_clearBtn, &QPushButton::clicked, [this](){
+                                                m_saveBtn->setEnabled(false);});
+    QObject::connect(m_clearBtn, &QPushButton::clicked,
                                                this, &QAppWindow::rstInputData);
-    QObject::connect(saveBtn, &QPushButton::clicked,
+    QObject::connect(m_saveBtn, &QPushButton::clicked,
                                                 this, &QAppWindow::saveTexForm);
 
 }
@@ -459,7 +465,7 @@ void QAppWindow::setAboutFrame(){
     m_abtFrame = new QFrame;
     m_abtFrame->setFrameShape(QFrame::StyledPanel);
     m_abtFrame->setFrameShadow(QFrame::Plain);
-    m_abtFrame->setFixedHeight(34);
+    m_abtFrame->setFixedHeight(38);
     m_abtFrame->setFixedWidth(m_appWindowWidth/2.33);
 
     QHBoxLayout* abtFrameHLayout = new QHBoxLayout(m_abtFrame);

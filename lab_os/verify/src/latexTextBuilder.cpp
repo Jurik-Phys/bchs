@@ -784,6 +784,33 @@ QString LatexTextBuilder::getTextStage09(){
     return res;
 }
 
+QString LatexTextBuilder::getResultTeX(){
+    QString res;
+    res = R"(
+    \text{Результаты расчёта параметров аварийного горения газовоздушной смеси:}
+    \\
+    \text{    - время выгорания газа в огневом шаре $t = %1$ c;} \\
+    \text{    - плотность потока энергии у приёмника ИК-излучения }
+    \text{$q = %2$ Вт/м$^2$;} \\
+    \text{    - время действия излучения на сетчатку глаза человека }
+    \text{$t_\text{имп} = %3$ c; }; \\
+    \text{    - диаметр отображения огневого шара на сетчатке глаза }
+    \text{$d = %4$ мм;} \\
+    \text{    - удельная энергия, воздействующая на сетчатку глаза }
+    \text{$Q_\text{имп} = %5$ Дж/м$^2$.}
+    )";
+
+    QString str1 = getNumericString(m_appCalc->getFireTime());
+    QString str2 = getNumericString(m_appCalc->getQDensity());
+    QString str3 = getNumericString(m_appCalc->getEyeRadiationTime());
+    QString str4 = getNumericString(m_appCalc->getFireBallEyeSize());
+    QString str5 = getNumericString(m_appCalc->getEyeEnDensity());
+
+    res = res.arg(str1).arg(str2).arg(str3).arg(str4).arg(str5);
+
+    return res;
+}
+
 QString LatexTextBuilder::getNumericString(double nVal, QString fmt){
     // fmt: "pow", "verb"
     QString res;
