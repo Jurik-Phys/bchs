@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.20)
 
-set(SOURCE_LIB ${CMAKE_SOURCE_DIR}/ext/MicroTeX/example/qt/qt_texwidget.cpp
+set(SOURCE_LIB ${PROJECT_SOURCE_DIR}/../../libTeX/example/qt/qt_texwidget.cpp
                appWindow.cpp
                customTableDelegate.cpp
                texBuilder.cpp

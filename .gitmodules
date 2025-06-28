@@ -1,3 +1,6 @@
 [submodule "lab_vz/verify/ext/MicroTeX"]
 	path = lab_vz/verify/ext/MicroTeX
 	url = https://github.com/NanoMichael/MicroTeX.git
+[submodule "libTeX"]
+	path = libTeX
+	url = https://github.com/NanoMichael/MicroTeX.git
