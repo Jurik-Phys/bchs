@@ -1,6 +1,6 @@
 // Begin main.cpp
 
-#include "haLabMain.h"
+#include "appWindowHA.h"
 
 #ifdef Q_OS_WIN
     #include <windows.h>
@@ -37,7 +37,7 @@ int main(int argc, char** argv){
 
     initQtTeX();
 
-    QHaLabMain appWindow;
+    QAppWindowHA appWindow;
     appWindow.setWindowIcon(appIcon);
     appWindow.show();
 

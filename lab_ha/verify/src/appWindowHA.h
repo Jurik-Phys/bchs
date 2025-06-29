@@ -1,18 +1,20 @@
 // Begin haLabMain.h
+
 #ifndef HALABMAIN_H
 #define HALABMAIN_H 1
 
 #include "microtex.h"
 #include "qt_texwidget.h"
 #include <QApplication>
+#include "labSolverHA.h"
 
-class QHaLabMain : public QWidget {
+class QAppWindowHA : public QWidget {
 
     Q_OBJECT
 
     public:
-        QHaLabMain(QWidget *parent = 0);
-        ~QHaLabMain();
+        QAppWindowHA(QWidget *parent = 0);
+        ~QAppWindowHA();
 
         void AppExit();
 
@@ -24,6 +26,8 @@ class QHaLabMain : public QWidget {
         const int m_appWindowWidth = 1390;
         const int m_appWindowHeight = 750;
         const int m_texTextSize = 18;
+        labSolverHA* m_labSolverHA;
 };
 #endif
+
 // End haLabMain.h
