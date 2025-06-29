@@ -95,7 +95,7 @@ const std::vector<InputDataHA> labDataVariants = {
         // 8. Класс устойчивости атмосферы по Паскуиллу (К_уст)
         .airPasquillClass = 4,
         // 9. Эквивалентная шероховатость земной поверхности (z_h) [см]
-        .groundRoughness = 100,
+        .groundRoughness = 100.0,
         // 10. Высота точки выброса (h) [м]
         .toxicGasEmissionHeight = 1.5,
         // 11. Расстояние от точки выброса до расчётной по оси X (x) [м]
@@ -107,7 +107,7 @@ const std::vector<InputDataHA> labDataVariants = {
         // 14. Время нахождения в зоне заражения (tau_з)[ч]
         .exposureTime = 1.5,
         // 15. Пороговая токсическая доза (D_порог) [мг·мин/м^3]
-        .toxicDoseThreshold = 2000,
+        .toxicDoseThreshold = 2000.0,
     },
     { /* Initial variant (variant #3) */
         // 0. Название токсичного вещества
@@ -141,7 +141,7 @@ const std::vector<InputDataHA> labDataVariants = {
         // 14. Время нахождения в зоне заражения (tau_з)[ч]
         .exposureTime = 1.0,
         // 15. Пороговая токсическая доза (D_порог) [мг·мин/м^3]
-        .toxicDoseThreshold = 100,
+        .toxicDoseThreshold = 100.0,
     },
     { /* Initial variant (variant #4) */
         // 0. Название токсичного вещества
@@ -167,9 +167,9 @@ const std::vector<InputDataHA> labDataVariants = {
         // 10. Высота точки выброса (h) [м]
         .toxicGasEmissionHeight = 2.5,
         // 11. Расстояние от точки выброса до расчётной по оси X (x) [м]
-        .xDistance = 5000,
+        .xDistance = 5000.0,
         // 12. Расстояние от оси X до расчётной точки по оси Y (y) [м]
-        .yDistance = 0,
+        .yDistance = 0.0,
         // 13. Время выброса ядовитого газа в атмосферу (tau) [ч]
         .toxicGasEmissionTime = 1.0,
         // 14. Время нахождения в зоне заражения (tau_з)[ч]
@@ -187,7 +187,7 @@ const std::vector<InputDataHA> labDataVariants = {
         // 3. Диаметр трубопровода (d) [м]
         .pipelineDiameter = 0.12,
         // 4. Избыточное давление газа в трубопроводе (р_1) [кПа]
-        .pipelineGasPressure = 55,
+        .pipelineGasPressure = 55.0,
         // 5. Температура ядовитого газообразного вещества (Т_г) [К]
         .toxicGasTemperature = 288.0,
         // 6. Температура атмосферного воздуха (Т_в) [К]
@@ -203,7 +203,7 @@ const std::vector<InputDataHA> labDataVariants = {
         // 11. Расстояние от точки выброса до расчётной по оси X (x) [м]
         .xDistance = 1900.0,
         // 12. Расстояние от оси X до расчётной точки по оси Y (y) [м]
-        .yDistance = 0,
+        .yDistance = 0.0,
         // 13. Время выброса ядовитого газа в атмосферу (tau) [ч]
         .toxicGasEmissionTime = 2.0,
         // 14. Время нахождения в зоне заражения (tau_з)[ч]
@@ -251,7 +251,7 @@ const std::vector<InputDataHA> labDataVariants = {
         // 1. Молярная масса ядовитого газа (М) [кг/кмоль]
         .toxicGasMolarMass = 44.0,
         // 2. Показатель адиабаты ядовитого газа (k)
-        .toxicGasAdiabaticIndex = 1.39,
+        .toxicGasAdiabaticIndex = 1.32,
         // 3. Диаметр трубопровода (d) [м]
         .pipelineDiameter = 0.14,
         // 4. Избыточное давление газа в трубопроводе (р_1) [кПа]
@@ -325,9 +325,9 @@ const std::vector<InputDataHA> labDataVariants = {
         // 4. Избыточное давление газа в трубопроводе (р_1) [кПа]
         .pipelineGasPressure = 75.0,
         // 5. Температура ядовитого газообразного вещества (Т_г) [К]
-        .toxicGasTemperature = 15.0,
+        .toxicGasTemperature = 288.0,
         // 6. Температура атмосферного воздуха (Т_в) [К]
-        .airTemperature = 10.0,
+        .airTemperature = 283.0,
         // 7. Cкорость ветра на высоте 10 м (V) [м/с]
         .airSpeed = 3.0,
         // 8. Класс устойчивости атмосферы по Паскуиллу (К_уст)
@@ -351,7 +351,7 @@ const std::vector<InputDataHA> labDataVariants = {
         // 0. Название токсичного вещества
         .toxicGasName = "Формальдегид (CH<sub>2</sub>O)",
         // 1. Молярная масса ядовитого газа (М) [кг/кмоль]
-        .toxicGasMolarMass = 30,
+        .toxicGasMolarMass = 30.0,
         // 2. Показатель адиабаты ядовитого газа (k)
         .toxicGasAdiabaticIndex = 1.28,
         // 3. Диаметр трубопровода (d) [м]
