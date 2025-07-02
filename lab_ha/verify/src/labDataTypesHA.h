@@ -41,161 +41,174 @@ struct InputDataHA {
     double toxicDoseThreshold;
 
     // Internal application values // Shared input data //
+    // 15 (b)
+    double toxicDoseThresholdExample = 13000.0 ;
     // 16. Aтмосферное давление (P_0) [кПа]
     double airPressure = 101.3;
     // 17. Молярный объём (V_0) [м^3/кмоль]
-    double molarVolume = 22.4;
+    double toxicGasMolarVolume = 22.4;
     // 18. Универсальная газовая постоянная (R_0) [Дж/(кмоль·K)]
     double uniGasConstR = 8314.2;
     // 19. Ускорение свободного падения (g) [м/c^2]
     double gAcceleration = 9.81;
     // 20. Температура при нормальных условиях (T_0) [K]
     double normalTemperature = 273.0;
-
-    // 21. Значения коэффициентов в зависимости
-    //     от классов устойчивости атмосферы по Паскуиллу (M-2313 табл. 1)
-    // C3
-    double getC3() {
-        switch (airPasquillClass){
-            case 1: return 0.22;
-            case 2: return 0.16;
-            case 3: return 0.11;
-            case 4: return 0.08;
-            case 5: return 0.06;
-            case 6: return 0.04;
-        }
-        return 0.0;
-    };
-    // A1
-    double getA1() {
-        switch (airPasquillClass){
-            case 1: return 0.112;
-            case 2: return 0.13;
-            case 3: return 0.112;
-            case 4: return 0.098;
-            case 5: return 0.0609;
-            case 6: return 0.0638;
-        }
-        return 0.0;
-    };
-    // B1
-    double getB1() {
-        switch (airPasquillClass){
-            case 1: return 1.06;
-            case 2: return 0.95;
-            case 3: return 0.92;
-            case 4: return 0.889;
-            case 5: return 0.895;
-            case 6: return 0.783;
-        }
-        return 0.0;
-    };
-    // A2
-    double getA2() {
-        switch (airPasquillClass){
-            case 1: return 0.000538;
-            case 2: return 0.000652;
-            case 3: return 0.000905;
-            case 4: return 0.001350;
-            case 5: return 0.001960;
-            case 6: return 0.001360;
-        }
-        return 0.0;
-    };
-    // B2
-    double getB2() {
-        switch (airPasquillClass){
-            case 1: return 0.815;
-            case 2: return 0.75;
-            case 3: return 0.718;
-            case 4: return 0.688;
-            case 5: return 0.684;
-            case 6: return 0.672;
-        }
-        return 0.0;
-    };
-    // SigmaMaxZ;
-    double getSigmaMaxZ() {
-        switch (airPasquillClass){
-            case 1: return 1600.0;
-            case 2: return 920.0;
-            case 3: return 640.0;
-            case 4: return 400.0;
-            case 5: return 220.0;
-            case 6: return 100.0;
-        }
-        return 0.0;
-    };
+    // 21. Число PI
+    double PI = 3.141592653589793;
     // 22. Значения коэффициентов в зависимости
-    // от эквивалентной шероховатости земной поверхности (z_h)
-    // Z0
-    double getZ0(){
-        int idx = getTableTwoColIdx();
-        switch (idx){
-            case 1: return 1.0;
-            case 2: return 4.0;
-            case 3: return 10.0;
-            case 4: return 40.0;
-            case 5: return 100.0;
-            case 6: return 400.0;
-        }
-        return 0.0;
-    }
-    // C1
-    double getC1(){
-        int idx = getTableTwoColIdx();
-        switch (idx){
-            case 1: return 1.56;
-            case 2: return 2.02;
-            case 3: return 2.73;
-            case 4: return 5.16;
-            case 5: return 7.37;
-            case 6: return 11.7;
-        }
-        return 0.0;
-    }
-    // D1
-    double getD1(){
-        int idx = getTableTwoColIdx();
-        switch (idx){
-            case 1: return 0.048;
-            case 2: return 0.0269;
-            case 3: return 0.0;
-            case 4: return -0.098;
-            case 5: return -0.00957;
-            case 6: return -0.128;
-        }
-        return 0.0;
-    }
-    // C2
-    double getC2(){
-        int idx = getTableTwoColIdx();
-        switch (idx){
-            case 1: return 0.000625;
-            case 2: return 0.000776;
-            case 3: return 0.0;
-            case 4: return 0.0538;
-            case 5: return 0.000233;
-            case 6: return 0.0000218;
-        }
-        return 0.0;
-    }
-    // D2
-    double getD2(){
-        int idx = getTableTwoColIdx();
-        switch (idx){
-            case 1: return 0.45;
-            case 2: return 0.37;
-            case 3: return 0.0;
-            case 4: return 0.225;
-            case 5: return 0.6;
-            case 6: return 0.78;
-        }
-        return 0.0;
-    }
+    //     от классов устойчивости атмосферы по Паскуиллу (M-2313 табл. 1)
+    double valC3 = getC3();
+    double valA1 = getA1();
+    double valB1 = getB1();
+    double valA2 = getA2();
+    double valB2 = getB2();
+    double valSigmaZMax = getSigmaZMax();
+    // 23. Значения коэффициентов в зависимости
+    //     от эквивалентной шероховатости земной поверхности (M-2313 табл. 2)
+    double valZ0 = getZ0();
+    double valC1 = getC1();
+    double valD1 = getD1();
+    double valC2 = getC2();
+    double valD2 = getD2();
 
     private:
-        double getTableTwoColIdx(){
+        double getC3() {
+            switch (airPasquillClass){
+                case 1: return 0.22;
+                case 2: return 0.16;
+                case 3: return 0.11;
+                case 4: return 0.08;
+                case 5: return 0.06;
+                case 6: return 0.04;
+            }
+            return 0.0;
+        };
+        // A1
+        double getA1() {
+            switch (airPasquillClass){
+                case 1: return 0.112;
+                case 2: return 0.13;
+                case 3: return 0.112;
+                case 4: return 0.098;
+                case 5: return 0.0609;
+                case 6: return 0.0638;
+            }
+            return 0.0;
+        };
+        // B1
+        double getB1() {
+            switch (airPasquillClass){
+                case 1: return 1.06;
+                case 2: return 0.95;
+                case 3: return 0.92;
+                case 4: return 0.889;
+                case 5: return 0.895;
+                case 6: return 0.783;
+            }
+            return 0.0;
+        };
+        // A2
+        double getA2() {
+            switch (airPasquillClass){
+                case 1: return 0.000538;
+                case 2: return 0.000652;
+                case 3: return 0.000905;
+                case 4: return 0.001350;
+                case 5: return 0.001960;
+                case 6: return 0.001360;
+            }
+            return 0.0;
+        };
+        // B2
+        double getB2() {
+            switch (airPasquillClass){
+                case 1: return 0.815;
+                case 2: return 0.75;
+                case 3: return 0.718;
+                case 4: return 0.688;
+                case 5: return 0.684;
+                case 6: return 0.672;
+            }
+            return 0.0;
+        };
+        // SigmaMaxZ;
+        double getSigmaZMax() {
+            switch (airPasquillClass){
+                case 1: return 1600.0;
+                case 2: return 920.0;
+                case 3: return 640.0;
+                case 4: return 400.0;
+                case 5: return 220.0;
+                case 6: return 100.0;
+            }
+            return 0.0;
+        };
+        // Z0
+        double getZ0(){
+            int idx = getTwoTableColumnIdx();
+            switch (idx){
+                case 1: return 1.0;
+                case 2: return 4.0;
+                case 3: return 10.0;
+                case 4: return 40.0;
+                case 5: return 100.0;
+                case 6: return 400.0;
+            }
+            return 0.0;
+        }
+        // C1
+        double getC1(){
+            int idx = getTwoTableColumnIdx();
+            switch (idx){
+                case 1: return 1.56;
+                case 2: return 2.02;
+                case 3: return 2.73;
+                case 4: return 5.16;
+                case 5: return 7.37;
+                case 6: return 11.7;
+            }
+            return 0.0;
+        }
+        // D1
+        double getD1(){
+            int idx = getTwoTableColumnIdx();
+            switch (idx){
+                case 1: return 0.048;
+                case 2: return 0.0269;
+                case 3: return 0.0;
+                case 4: return -0.098;
+                case 5: return -0.00957;
+                case 6: return -0.128;
+            }
+            return 0.0;
+        }
+        // C2
+        double getC2(){
+            int idx = getTwoTableColumnIdx();
+            switch (idx){
+                case 1: return 0.000625;
+                case 2: return 0.000776;
+                case 3: return 0.0;
+                case 4: return 0.0538;
+                case 5: return 0.000233;
+                case 6: return 0.0000218;
+            }
+            return 0.0;
+        }
+        // D2
+        double getD2(){
+            int idx = getTwoTableColumnIdx();
+            switch (idx){
+                case 1: return 0.45;
+                case 2: return 0.37;
+                case 3: return 0.0;
+                case 4: return 0.225;
+                case 5: return 0.6;
+                case 6: return 0.78;
+            }
+            return 0.0;
+        }
+        double getTwoTableColumnIdx(){
             int idx = 0;
             if (groundRoughness <= 2.0){
                 idx = 1;
@@ -217,6 +230,54 @@ struct InputDataHA {
             }
             return idx;
         }
+};
+
+struct RawDataHA {
+    // Критическое давление при истечении газа из трубопровода (P_ист), кПа
+    double toxicGasMaxFlowPressure;
+    // Абслютное давление газа непосредственно перед взрывом (P_1), кПа
+    double absPipelineGasPressure;
+    // Плотность (\rho_0) токсичного газа при нормальных условиях, кг/м^3
+    double toxicGasStdDensity;
+    // Плотность (\rho_1) токсичного газа при давлении газопровода, кг/м^3
+    double toxicGasPipelineDensity;
+    // Плотность (\rho_кр) токсичного газа при критическом давлении, кг/м^
+    double toxicGasMaxFlowDensity;
+    // Площадь (F_отв), через которое истекает газ (сечение газопровода), м^3
+    double pipelineSquare;
+    // Секундное количество газа (G_г), поступающего в атмосферу, кг/c
+    double toxicGasFlowRateS;
+    // Часовое количесвто газа (G_г^час), поступающего в атмосферу, кг/ч
+    double toxicGasFlowRateH;
+    // Газовая постоянная (R_г), Дж/(кг∙К)
+    double toxicGasConstR;
+    // Скорость истечения газа (\omega_ист) из трубопровода
+    double toxicGasFlowSpeed;
+    // Секундный объём (V_г) истекающего газа, м^3/c
+    double toxicGasFlowVolumeSpeed;
+    // Высота побъёма (\Delta h) частиц газа в воздухе, м
+    double toxicGasEmissionDeltaHeight;
+    // Эффективная высота точки выброса газа (H), м
+    double toxicGasEmissionEffectiveHeight;
+    // Стандартное отклонение (\sigma Y) распределения примеси в облаке по OY
+    double toxicGasFlowSigmaY;
+    // Стандартное отклонение (\sigma Z) распределения примеси в облаке по OZ
+    double toxicGasFlowSigmaZ;
+    // Фактор разбавления (F) концентрации выброса на уровне земли, с/м^3
+    double toxicGasDilutionFactor;
+    // Концентрация (C) токсичного газа в удаленной точке, кг/м^3
+    double toxicGasConcentrationAtPoint;
+    // Токсическая доза (D) при известном времени ингаляции, мг∙мин/м^3
+    double receivedToxicDose;
+    // Полуширина зоны заражения (Y_порог), м
+    double toxicZoneHalfWidthExample;
+    // Координаты X для расчёта Y_порог
+    std::vector<double> xDistanceArray;
+    std::vector<double> toxicZoneHalfWidthArray;
+};
+
+struct OutDataHA {
+
 };
 
 #endif
